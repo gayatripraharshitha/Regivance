@@ -47,7 +47,7 @@ You may also skip activation entirely by replacing `python` above with `.\.venv\
   python -m pip install --no-cache-dir -r requirements.txt
   ```
 
-The pipeline currently validates the project configuration and creates the expected output directories. The next milestone is the data-ingestion slice described in `docs/implementation-plan.md`.
+The pipeline parses the downloaded source, validates it, converts percentage returns to decimals, builds the equal-weight portfolio and five-day realized-volatility target, then writes `data/processed/portfolio_returns.parquet`. The next milestone is the rolling-volatility and EWMA benchmark.
 
 ## Layout
 
