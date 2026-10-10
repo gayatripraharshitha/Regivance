@@ -14,6 +14,12 @@ def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
     with config_path.open(encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
+    validate_config(config)
+    return config
+
+
+def validate_config(config: Any) -> None:
+    """Validate an already loaded configuration mapping."""
     if not isinstance(config, dict):
         raise ValueError("Configuration must be a YAML mapping.")
     missing = REQUIRED_SECTIONS - config.keys()
@@ -23,4 +29,3 @@ def load_config(path: str | Path) -> dict[str, Any]:
         raise ValueError("forecast.horizon_days must be positive.")
     if config["evaluation"]["embargo_days"] < config["forecast"]["horizon_days"]:
         raise ValueError("evaluation.embargo_days must be at least forecast.horizon_days.")
-    return config

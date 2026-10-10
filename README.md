@@ -6,15 +6,46 @@ A reproducible research system for forecasting five-trading-day volatility of a 
 
 Does market-regime information improve five-day realized-volatility forecasts, and does a small LSTM outperform conventional volatility models out of sample?
 
-## Quick start
+## Windows / PowerShell setup
+
+Use Python 3.10–3.13 (64-bit). Run each command from the repository root in **PowerShell**. Invoking Python through the virtual environment avoids accidentally installing packages into a different Python installation.
 
 ```powershell
-python -m venv .venv
+# Create the isolated environment (only needed once)
+py -3.13 -m venv .venv
+
+# Activate it for the current PowerShell session
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+
+# Upgrade pip and install all project dependencies
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+# Verify dependencies, run the scaffold, and execute tests
+python -c "import arch, numpy, pandas, sklearn, torch; print('Dependencies verified')"
 python -m src.pipeline --config configs/experiment.yaml
-pytest
+python -m pytest
 ```
+
+If `py -3.13` is unavailable, replace it with `python`; use `py --list` to see installed Python versions. If PowerShell blocks activation, run the following **once for the current terminal only**, then activate again:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+You may also skip activation entirely by replacing `python` above with `.\.venv\Scripts\python.exe`.
+
+### Installation troubleshooting
+
+- `No matching distribution found`: update pip with `python -m pip install --upgrade pip`, then retry. Confirm the command is using the virtual environment: `python -c "import sys; print(sys.executable)"`.
+- `Access is denied` or temp-directory errors: close editors/terminals using the environment, then retry with a local temp directory:
+
+  ```powershell
+  New-Item -ItemType Directory -Force .pip-tmp | Out-Null
+  $env:TMP = (Resolve-Path .pip-tmp)
+  $env:TEMP = $env:TMP
+  python -m pip install --no-cache-dir -r requirements.txt
+  ```
 
 The pipeline currently validates the project configuration and creates the expected output directories. The next milestone is the data-ingestion slice described in `docs/implementation-plan.md`.
 
