@@ -1,0 +1,37 @@
+experiment:
+  name: regime_aware_volatility_v1
+  seed: 42
+data:
+  source: kenneth_french_30_industry_daily
+  raw_path: data/raw/30_Industry_Portfolios_Daily.csv
+  processed_path: data/processed/portfolio_returns.parquet
+  portfolio_weights: equal_weight
+forecast:
+  horizon_days: 5
+  annualization_days: 252
+features:
+  rolling_windows: [5, 21, 63]
+  regime_features: [portfolio_volatility_21d, mean_industry_correlation_21d, cross_sectional_dispersion]
+  n_regimes: 3
+evaluation:
+  train_days: 1260
+  validation_days: 252
+  test_days: 252
+  step_days: 21
+  embargo_days: 5
+models:
+  rolling_volatility:
+    window_days: 21
+  ewma:
+    decay: 0.94
+  garch:
+    p: 1
+    q: 1
+  lstm:
+    sequence_days: 63
+    hidden_size: 16
+    num_layers: 1
+    dropout: 0.0
+    learning_rate: 0.001
+    epochs: 50
+    batch_size: 32

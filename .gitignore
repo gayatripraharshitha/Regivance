@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+data/raw/*
+!data/raw/README.md
+data/processed/*
+!data/processed/README.md
+reports/figures/*
+!reports/figures/.gitkeep
+reports/tables/*
+!reports/tables/.gitkeep
+*.pt
+*.pth
+*.log
+.DS_Store
