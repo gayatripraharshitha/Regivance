@@ -3,12 +3,12 @@ import numpy as np
 import pandas as pd
 
 
-def calculate_volatility_metrics(
+def calculate_volatility_loss_contributions(
     actual: pd.Series,
     forecast: pd.Series,
-) -> dict[str, float]:
+) -> dict[str, pd.Series]:
     """
-    Calculate MAE, RMSE, and ratio-based QLIKE for volatility forecasts.
+    Calculate additive loss contributions for volatility forecasts.
 
     Actual and forecast values must use the same dates and units.
     QLIKE is calculated from squared volatility values.
@@ -45,10 +45,30 @@ def calculate_volatility_metrics(
     forecast_variance = forecast_values**2
     ratio = actual_variance / forecast_variance
 
-    qlike = np.mean(ratio - np.log(ratio) - 1)
+    return {
+        "absolute_error": pd.Series(
+            np.abs(errors), index=actual.index, name="absolute_error"
+        ),
+        "squared_error": pd.Series(
+            errors**2, index=actual.index, name="squared_error"
+        ),
+        "qlike": pd.Series(
+            ratio - np.log(ratio) - 1,
+            index=actual.index,
+            name="qlike",
+        ),
+    }
+
+
+def calculate_volatility_metrics(
+    actual: pd.Series,
+    forecast: pd.Series,
+) -> dict[str, float]:
+    """Calculate MAE, RMSE, and ratio-based QLIKE for volatility forecasts."""
+    losses = calculate_volatility_loss_contributions(actual, forecast)
 
     return {
-        "mae": float(np.mean(np.abs(errors))),
-        "rmse": float(np.sqrt(np.mean(errors**2))),
-        "qlike": float(qlike),
+        "mae": float(losses["absolute_error"].mean()),
+        "rmse": float(np.sqrt(losses["squared_error"].mean())),
+        "qlike": float(losses["qlike"].mean()),
     }

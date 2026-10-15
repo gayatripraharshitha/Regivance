@@ -22,6 +22,7 @@ class LSTMConfig:
     max_epochs: int = 30
     patience: int = 5
     random_state: int = 42
+    objective: str = "mse_log"
 
     def __post_init__(self) -> None:
         integer_fields = {
@@ -57,6 +58,9 @@ class LSTMConfig:
 
         if not np.isfinite(self.weight_decay) or self.weight_decay < 0:
             raise ValueError("weight_decay must be finite and non-negative.")
+
+        if self.objective not in {"mse_log", "qlike"}:
+            raise ValueError("objective must be 'mse_log' or 'qlike'.")
 
 
 class _LSTMNetwork(nn.Module):
@@ -97,8 +101,10 @@ class LSTMVolatilityForecaster:
     Train a compact LSTM using training and validation sequences.
 
     The model standardizes log-volatility targets using training targets
-    only. Input-feature scaling should also be fitted on training data by
-    the calling evaluation pipeline.
+    only. Its default objective is MSE in that standardized-log space.
+    The optional QLIKE objective converts predictions back to log-volatility
+    before applying the variance-ratio loss. Input-feature scaling should
+    also be fitted on training data by the calling evaluation pipeline.
     """
 
     def __init__(self, config: LSTMConfig | None = None) -> None:
@@ -155,6 +161,56 @@ class LSTMVolatilityForecaster:
 
         return values
 
+    @staticmethod
+    def qlike_loss_from_standardized_log_predictions(
+        standardized_log_predictions: torch.Tensor,
+        targets: torch.Tensor,
+        target_log_mean: float,
+        target_log_scale: float,
+    ) -> torch.Tensor:
+        """Return mean variance-based QLIKE from standardized log forecasts."""
+        if not np.isfinite(target_log_mean) or not np.isfinite(target_log_scale):
+            raise ValueError("Target log scaling parameters must be finite.")
+        if target_log_scale <= 0:
+            raise ValueError("Target log scaling parameter must be positive.")
+        if not torch.isfinite(standardized_log_predictions).all():
+            raise FloatingPointError("QLIKE predictions are non-finite.")
+        if not torch.isfinite(targets).all() or (targets <= 0).any():
+            raise ValueError("QLIKE targets must be finite and positive.")
+
+        predicted_log = (
+            standardized_log_predictions * target_log_scale + target_log_mean
+        )
+        log_ratio = 2.0 * (torch.log(targets) - predicted_log)
+        maximum_log = float(np.log(torch.finfo(log_ratio.dtype).max))
+
+        # Reject numerical overflow instead of clipping a loss or target.
+        if not torch.isfinite(log_ratio).all() or (log_ratio > maximum_log).any():
+            raise FloatingPointError("QLIKE ratio became numerically unstable.")
+
+        loss = torch.exp(log_ratio) - log_ratio - 1.0
+        if not torch.isfinite(loss).all():
+            raise FloatingPointError("QLIKE loss became non-finite.")
+        return loss.mean()
+
+    def _objective_loss(
+        self,
+        standardized_log_predictions: torch.Tensor,
+        normalized_targets: torch.Tensor,
+        original_targets: torch.Tensor,
+    ) -> torch.Tensor:
+        """Apply the configured training or validation objective."""
+        if self.config.objective == "mse_log":
+            return nn.functional.mse_loss(
+                standardized_log_predictions, normalized_targets
+            )
+        return self.qlike_loss_from_standardized_log_predictions(
+            standardized_log_predictions,
+            original_targets,
+            self.target_log_mean_,
+            self.target_log_scale_,
+        )
+
     def fit(
         self,
         training_sequences: np.ndarray,
@@ -201,6 +257,7 @@ class LSTMVolatilityForecaster:
         y_train_tensor = torch.from_numpy(
             normalized_train.astype(np.float32)
         )
+        y_train_original_tensor = torch.from_numpy(y_train.astype(np.float32))
 
         x_validation_tensor = torch.from_numpy(x_validation)
 
@@ -211,6 +268,9 @@ class LSTMVolatilityForecaster:
         y_validation_tensor = torch.from_numpy(
             normalized_validation.astype(np.float32)
         )
+        y_validation_original_tensor = torch.from_numpy(
+            y_validation.astype(np.float32)
+        )
 
         # Explicitly use CPU for compatibility with CPU-only installations.
         torch.manual_seed(self.config.random_state)
@@ -219,7 +279,11 @@ class LSTMVolatilityForecaster:
         generator.manual_seed(self.config.random_state)
 
         train_loader = DataLoader(
-            TensorDataset(x_train_tensor, y_train_tensor),
+            TensorDataset(
+                x_train_tensor,
+                y_train_tensor,
+                y_train_original_tensor,
+            ),
             batch_size=min(self.config.batch_size, len(x_train)),
             shuffle=True,
             generator=generator,
@@ -239,8 +303,6 @@ class LSTMVolatilityForecaster:
             weight_decay=self.config.weight_decay,
         )
 
-        loss_function = nn.MSELoss()
-
         best_validation_loss = float("inf")
         best_state = None
         best_epoch = 0
@@ -250,11 +312,15 @@ class LSTMVolatilityForecaster:
         for epoch in range(1, self.config.max_epochs + 1):
             self.model_.train()
 
-            for batch_x, batch_y in train_loader:
+            for batch_x, batch_y, batch_original_y in train_loader:
                 optimizer.zero_grad(set_to_none=True)
 
                 predictions = self.model_(batch_x)
-                loss = loss_function(predictions, batch_y)
+                loss = self._objective_loss(
+                    predictions,
+                    batch_y,
+                    batch_original_y,
+                )
 
                 if not torch.isfinite(loss):
                     raise RuntimeError(
@@ -262,6 +328,14 @@ class LSTMVolatilityForecaster:
                     )
 
                 loss.backward()
+
+                if any(
+                    parameter.grad is not None
+                    and not torch.isfinite(parameter.grad).all()
+                    for parameter in self.model_.parameters()
+                ):
+                    raise RuntimeError("Training gradients became non-finite.")
+
                 optimizer.step()
 
             self.model_.eval()
@@ -271,9 +345,10 @@ class LSTMVolatilityForecaster:
                     x_validation_tensor
                 )
                 validation_loss = float(
-                    loss_function(
+                    self._objective_loss(
                         validation_predictions,
                         y_validation_tensor,
+                        y_validation_original_tensor,
                     ).item()
                 )
 
@@ -308,6 +383,7 @@ class LSTMVolatilityForecaster:
         self.n_epochs_trained_ = len(self.validation_history_)
         self.best_epoch_ = best_epoch
         self.best_validation_loss_ = best_validation_loss
+        self.objective_ = self.config.objective
         self.lookback_ = x_train.shape[1]
         self.n_features_in_ = x_train.shape[2]
 
