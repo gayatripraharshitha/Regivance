@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/layout/AppShell";
+import { ThemeProvider } from "./components/ui/ThemeProvider";
 
 const Overview = lazy(() => import("./pages/Overview").then((module) => ({ default: module.Overview })));
 const DataFeatures = lazy(() => import("./pages/DataFeatures").then((module) => ({ default: module.DataFeatures })));
@@ -10,7 +11,7 @@ const About = lazy(() => import("./pages/About").then((module) => ({ default: mo
 
 export default function App() {
   return (
-    <AppShell>
+    <ThemeProvider><AppShell>
       <Suspense fallback={<div className="route-loading">Loading research view…</div>}>
         <Routes>
           <Route path="/" element={<Overview />} />
@@ -21,6 +22,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
-    </AppShell>
+    </AppShell></ThemeProvider>
   );
 }

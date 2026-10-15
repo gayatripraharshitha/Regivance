@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { BarChart3, Code2, Database, FlaskConical, Info, Menu, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { BarChart3, Code2, Database, FlaskConical, Info, Menu, Moon, Sun, X } from "lucide-react";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { NavLink, useLocation } from "react-router-dom";
+import { useTheme } from "../ui/ThemeProvider";
 
 const links = [
   ["/", "Overview", BarChart3],
@@ -13,16 +14,24 @@ const links = [
 
 export function AppShell({ children }) {
   const [open, setOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { pathname } = useLocation();
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 150, damping: 30 });
   return (
     <div className="app-shell">
+      <motion.div className="scroll-progress" style={{ scaleX: progress }} />
       <header className="topbar">
         <NavLink to="/" className="brand" onClick={() => setOpen(false)} aria-label="Regivance home">
           <span className="brand-mark">R</span><span>REGIVANCE</span>
         </NavLink>
-        <button className="menu-button" onClick={() => setOpen((value) => !value)} aria-label="Toggle navigation">
+        <button className="menu-button" onClick={() => setOpen((value) => !value)} aria-label="Toggle navigation" aria-expanded={open}>
           {open ? <X /> : <Menu />}
         </button>
         <nav className="desktop-nav">{links.map(([to, label]) => <NavItem key={to} to={to} label={label} />)}</nav>
+        <motion.button whileTap={{ scale: .93 }} className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}>
+          {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}<span>{theme === "light" ? "Dark" : "Light"}</span>
+        </motion.button>
         <span className="status-pill"><i /> Research build</span>
       </header>
       <AnimatePresence>
@@ -32,7 +41,7 @@ export function AppShell({ children }) {
           </motion.nav>
         )}
       </AnimatePresence>
-      <main>{children}</main>
+      <main><motion.div key={pathname} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3 }}>{children}</motion.div></main>
       <footer><span>Regivance · quantitative research system</span><span>Research only — not investment advice</span></footer>
     </div>
   );

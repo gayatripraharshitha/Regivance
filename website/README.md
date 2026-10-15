@@ -2,6 +2,8 @@
 
 React/Vite presentation layer for the Regivance research system. It reads curated, versioned development results and does not retrain models in the browser.
 
+The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. Page entrances, hover effects and chart animations respect reduced-motion preferences.
+
 ## Structure
 
 ```text
