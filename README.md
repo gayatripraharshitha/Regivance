@@ -473,6 +473,7 @@ The LSTM's weakness is concentrated where risk management matters most. In the m
 - A lagged 63-observation inverse-volatility industry portfolio provides an additional construction. Student-t GJR-GARCH remains strongest among the three rerun benchmarks, with QLIKE 0.4457.
 - The dashboard model metrics and stress table are exported from verified CSV artifacts by `scripts/export_dashboard_data.py` instead of being manually copied.
 - The `/risk` dashboard route presents stress-period deterioration, VaR calibration, five-seed neural sensitivity, rapid-rise underprediction and inverse-volatility portfolio robustness. Its download controls link directly to the versioned V2 evidence tables.
+- The `/lab` route offers a browser-local CSV workflow. It validates chronological return data, constructs an equal-weighted portfolio, reproduces the 21-observation trailing volatility and five-observation forward target, charts the result and exports a processed CSV. It does not upload data or claim to perform model inference.
 
 Reproduce these extensions after the main development artifacts exist:
 
@@ -671,6 +672,7 @@ The modular structure provides a starting point for growth, but production scala
 | --- | --- | --- |
 | Versioned JSON export | Synchronize reviewed Python artifacts with the dashboard | Implemented for model and V2 risk summaries |
 | Read-only Python API | Serve filtered forecast history and experiment metadata | Planned |
+| Browser-local data lab | Validate custom CSV returns and reproduce deterministic transformations | Implemented |
 | Background job queue | Execute long experiments outside browser requests | Planned |
 | Object storage and cache | Distribute large forecast artifacts efficiently | Planned |
 | Frontend CI and browser automation | Validate build and interaction behavior continuously | Unit/integration CI implemented; full browser automation remains future work |

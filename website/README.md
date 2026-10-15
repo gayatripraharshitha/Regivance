@@ -2,7 +2,13 @@
 
 React/Vite presentation layer for the Regivance research system. It reads curated, versioned development results and does not retrain models in the browser.
 
-The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. The dedicated **Risk analysis** route visualizes stress degradation, VaR calibration, neural seed sensitivity, rapid-rise underprediction and alternative-portfolio robustness. Page entrances, hover effects and chart animations respect reduced-motion preferences.
+The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. The dedicated **Risk analysis** route visualizes stress degradation, VaR calibration, neural seed sensitivity, rapid-rise underprediction and alternative-portfolio robustness. The **Data lab** route validates a user-selected CSV locally, reproduces the portfolio/target transformations and exports a processed file without uploading source data. Page entrances, hover effects and chart animations respect reduced-motion preferences.
+
+## Data lab contract
+
+The CSV must contain a unique header, one chronological date column and at least one numeric return column. Dates may use ISO format or `YYYYMMDD`. Select whether returns are percentages (`1 = 1%`) or decimals (`0.01 = 1%`). Files are limited to 10 MB and 100,000 rows for browser safety.
+
+The Data lab computes equal-weighted portfolio returns, 21-observation trailing root-mean-square volatility and the five-observation forward root-mean-square target used by the research project. It intentionally does not train or run forecasting models.
 
 ## Structure
 

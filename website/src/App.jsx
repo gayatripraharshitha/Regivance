@@ -7,6 +7,7 @@ const Overview = lazy(() => import("./pages/Overview").then((module) => ({ defau
 const DataFeatures = lazy(() => import("./pages/DataFeatures").then((module) => ({ default: module.DataFeatures })));
 const ModelResults = lazy(() => import("./pages/ModelResults").then((module) => ({ default: module.ModelResults })));
 const RiskAnalysis = lazy(() => import("./pages/RiskAnalysis").then((module) => ({ default: module.RiskAnalysis })));
+const DataLab = lazy(() => import("./pages/DataLab").then((module) => ({ default: module.DataLab })));
 const Methodology = lazy(() => import("./pages/Methodology").then((module) => ({ default: module.Methodology })));
 const About = lazy(() => import("./pages/About").then((module) => ({ default: module.About })));
 
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/data" element={<DataFeatures />} />
           <Route path="/results" element={<ModelResults />} />
           <Route path="/risk" element={<RiskAnalysis />} />
+          <Route path="/lab" element={<DataLab />} />
           <Route path="/methodology" element={<Methodology />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<Navigate to="/" replace />} />

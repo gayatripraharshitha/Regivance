@@ -52,3 +52,14 @@ test("risk analysis exposes verified stress, VaR and robustness evidence", async
   expect(screen.getByText(/Prefer GJR-GARCH-t today/i)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /Download seed data/i })).toHaveAttribute("href", expect.stringContaining("v2_lstm_seed_sensitivity.csv"));
 });
+
+test("data lab loads a sample, validates it and produces downloadable results", async () => {
+  render(<MemoryRouter initialEntries={["/lab"]}><App /></MemoryRouter>);
+  expect(await screen.findByRole("heading", { name: /Run your own data/i })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: /load the sample/i }));
+  expect(screen.getByText(/30 rows/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Validate and calculate" }));
+  expect(screen.getByRole("heading", { name: "Your transformed volatility series" })).toBeInTheDocument();
+  expect(screen.getByText("5", { exact: true })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /Download processed CSV/i })).toBeInTheDocument();
+});
