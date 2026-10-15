@@ -11,7 +11,7 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? "#f5f8ff" : "#05070a");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? "#f5f8ff" : "#0d0b0a");
     try { localStorage.setItem("regivance-theme", theme); } catch { /* Storage can be disabled. */ }
   }, [theme]);
   return <ThemeContext.Provider value={{ theme, toggleTheme: () => setTheme(value => value === "light" ? "dark" : "light") }}>
