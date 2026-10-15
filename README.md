@@ -105,7 +105,7 @@ Archived source returns
     -> reviewed summary values used by the dashboard
 ```
 
-The dashboard currently reads a curated JavaScript data module. There is no live Python API or automatic CSV-to-browser synchronization. Browser requests do not launch model training.
+The static dashboard reads a generated, versioned JSON artifact. An optional read-only FastAPI service exposes larger reviewed forecast histories and experiment metadata; browser requests never launch model training.
 
 ## Technology stack
 
@@ -222,11 +222,12 @@ On Linux/macOS, use `npm` instead of `npm.cmd`. On Windows, `npm.cmd` avoids Pow
 ### Suggested demonstration sequence
 
 1. Open **Overview** to introduce the research question and development finding.
-2. Visit **Data & features** to explain the portfolio, target and three regime features.
+2. Use the animated menu to visit **Data & features** and explain the portfolio, target and three regime features.
 3. Use the regime explorer to explain lower, middle and higher volatility ranks.
-4. Visit **Results**, switch MAE/RMSE/QLIKE, filter model families and inspect individual models.
-5. Open **Methodology** to explain the chronological folds and embargo.
-6. Switch light/dark themes and show the report for deeper research evidence.
+4. Visit **Results** and **Risk analysis** to compare models and disclose stress failures.
+5. Use **Data lab** to demonstrate browser-local transformation of a sample or custom CSV.
+6. Optionally start the Python service and open **API** to query reviewed forecast history.
+7. Open **Methodology**, switch themes and show the report for deeper research evidence.
 
 The dashboard includes curated scores, so this presentation path does not require downloading the source dataset or rerunning all experiments.
 
@@ -262,6 +263,16 @@ python3 -m venv .venv
 ```
 
 For the commands below, replace `.\.venv\Scripts\python.exe` with `.venv/bin/python` on these platforms.
+
+### Optional read-only API
+
+After installing the research requirements, start the service from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn api.app:app --reload
+```
+
+The API listens on `http://127.0.0.1:8000` by default. OpenAPI documentation is available at `/docs`. The React **API** view connects to this address automatically; use `VITE_API_BASE_URL` for a different host. Configure allowed browser origins with the comma-separated `REGIVANCE_CORS_ORIGINS` environment variable.
 
 ### Exact research environment
 
@@ -475,6 +486,7 @@ The LSTM's weakness is concentrated where risk management matters most. In the m
 - The `/risk` dashboard route presents stress-period deterioration, VaR calibration, five-seed neural sensitivity, rapid-rise underprediction and inverse-volatility portfolio robustness. Its download controls link directly to the versioned V2 evidence tables.
 - The `/lab` route offers a browser-local CSV workflow. It validates chronological return data, constructs an equal-weighted portfolio, reproduces the 21-observation trailing volatility and five-observation forward target, charts the result and exports a processed CSV. It does not upload data or claim to perform model inference.
 - The V2 presentation layer uses a midnight-blue/cyan dark theme with animated ambient depth, live metric transitions and restrained card interactions. Framer Motion, Recharts and Lucide are used with reduced-motion support and an application recovery boundary.
+- The versioned FastAPI service exposes health, research metadata, pooled model scores and filtered/paginated historical forecasts. It reads reviewed artifacts only and never trains models or modifies research results. The `/api` dashboard route provides an optional interactive client with an explicit offline state.
 
 Reproduce these extensions after the main development artifacts exist:
 
@@ -573,7 +585,7 @@ After a new research experiment:
 4. Run the React tests and production build.
 5. Review the changed pages before publishing.
 
-The versioned dashboard JSON is generated from verified compact CSV artifacts by `scripts/export_dashboard_data.py`. A read-only API for large forecast histories remains a future extension. The decorative signal on the overview is an illustration rather than a historical forecast series. The regime explorer explains ranking semantics rather than classifying a live market.
+The versioned dashboard JSON is generated from verified compact CSV artifacts by `scripts/export_dashboard_data.py`. The optional read-only API serves large forecast histories from reviewed artifacts. The decorative signal on the overview is an illustration rather than a historical forecast series. The regime explorer explains ranking semantics rather than classifying a live market.
 
 ## Testing and quality checks
 
@@ -672,7 +684,7 @@ The modular structure provides a starting point for growth, but production scala
 | Extension | Purpose | Current state |
 | --- | --- | --- |
 | Versioned JSON export | Synchronize reviewed Python artifacts with the dashboard | Implemented for model and V2 risk summaries |
-| Read-only Python API | Serve filtered forecast history and experiment metadata | Planned |
+| Read-only Python API | Serve filtered forecast history and experiment metadata | Implemented for reviewed development artifacts |
 | Browser-local data lab | Validate custom CSV returns and reproduce deterministic transformations | Implemented |
 | Background job queue | Execute long experiments outside browser requests | Planned |
 | Object storage and cache | Distribute large forecast artifacts efficiently | Planned |
@@ -728,7 +740,7 @@ Python changes can invalidate the prospective code fingerprint. A necessary rese
 - The dashboard is a static research presentation. Compact verified artifacts are synchronized by an explicit export command, but forecasts are not live.
 - Prospective market validation and production-scale performance remain unverified.
 
-The next research milestone is the registered prospective comparison. The next product milestone is a read-only forecast API and broader frontend/browser validation.
+The next research milestone is the registered prospective comparison. The next product milestone is deployable API/frontend hosting, observability and broader browser validation.
 
 ## Data attribution and licensing
 

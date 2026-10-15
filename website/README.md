@@ -12,6 +12,16 @@ The CSV must contain a unique header, one chronological date column and at least
 
 The Data lab computes equal-weighted portfolio returns, 21-observation trailing root-mean-square volatility and the five-observation forward root-mean-square target used by the research project. It intentionally does not train or run forecasting models.
 
+## API explorer
+
+Start the read-only Python API from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn api.app:app --reload
+```
+
+Then start the dashboard normally and open `/api`. The explorer reads versioned metadata, reviewed model scores and a paginated forecast history. Set `VITE_API_BASE_URL` when the API is hosted somewhere other than `http://127.0.0.1:8000`. The API remains optional; all static dashboard pages continue to work while it is offline.
+
 ## Structure
 
 ```text

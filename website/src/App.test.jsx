@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitForElementToBeRemoved, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import App from "./App";
 import { beforeEach, expect, test, vi } from "vitest";
@@ -11,6 +11,15 @@ test("renders the research question and verified test count", async () => {
   render(<MemoryRouter><App /></MemoryRouter>);
   expect(await screen.findByText(/Markets change shape/i)).toBeInTheDocument();
   expect(screen.getByLabelText("125")).toBeInTheDocument();
+});
+
+test("animated menu opens the complete side navigation and closes on selection", async () => {
+  render(<MemoryRouter><App /></MemoryRouter>);
+  fireEvent.click(screen.getByRole("button", { name:"Toggle navigation" }));
+  const navigation = screen.getByRole("dialog", { name:"Site navigation" });
+  expect(within(navigation).getByText("8 views")).toBeInTheDocument();
+  fireEvent.click(within(navigation).getByRole("link", { name:/Risk analysis/ }));
+  await waitForElementToBeRemoved(() => screen.queryByRole("dialog", { name:"Site navigation" }));
 });
 
 test("theme defaults to light, switches and persists across remounts", async () => {
@@ -62,4 +71,18 @@ test("data lab loads a sample, validates it and produces downloadable results", 
   expect(screen.getByRole("heading", { name: "Your transformed volatility series" })).toBeInTheDocument();
   expect(screen.getByText("5", { exact: true })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /Download processed CSV/i })).toBeInTheDocument();
+});
+
+test("API explorer connects and loads reviewed forecast history", async () => {
+  const responses = [
+    { schemaVersion:1, scope:"historical_development", observations:2520, startDate:"2016-08-15", endDate:"2026-08-31", models:["GJR-GARCH-Student-t"] },
+    { items:[{ model:"GJR-GARCH-Student-t", mae:.007, rmse:.011, qlike:.419 }] },
+    { model:"GJR-GARCH-Student-t", total:1, count:1, items:[{ date:"2020-03-16", actual:.08, forecast:.04, fold:43, regime:"higher" }] },
+  ];
+  vi.stubGlobal("fetch", vi.fn(() => Promise.resolve({ ok:true, json:() => Promise.resolve(responses.shift()) })));
+  render(<MemoryRouter initialEntries={["/api"]}><App /></MemoryRouter>);
+  expect(await screen.findByText("API connected")).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name:"Load forecast history" }));
+  expect(await screen.findByText(/1 displayed from 1/)).toBeInTheDocument();
+  vi.unstubAllGlobals();
 });
