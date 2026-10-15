@@ -39,6 +39,8 @@ The five-observation targets use overlapping future return windows. Consequently
 
 This analysis does not change or clip forecasts. It attributes loss using the predictions that were already generated.
 
+The V2 follow-up adds mutually exclusive normal, high-volatility and February–April 2020 groups, plus a rapid-volatility-rise diagnostic. See [V2 risk analysis](v2_risk_analysis.md). The shock result remains severe: the risk-plus-regime LSTM records QLIKE 8.1162 and an 88.7% underprediction rate across the 62 shock origins.
+
 ## Generated outputs
 
 - `reports/tables/forecast_failure_daily_losses.csv`

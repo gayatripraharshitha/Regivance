@@ -29,14 +29,22 @@ from scripts.compare_lstm_risk_features import scale_returns, scale_risk_feature
 from scripts.compare_lstm_qlike_objective import evaluate_qlike_model
 from scripts.analyze_dependence_robust_comparison import hac_mean_difference, holm_adjust, moving_block_bootstrap_ci
 
-FREEZE = ROOT / "configs/frozen_protocol.json"
+FREEZE = ROOT / "configs/frozen_protocol_v2.json"
 GARCH = [("GARCH-normal", "normal", False), ("GARCH-Student-t", "t", False), ("GJR-GARCH-Student-t", "t", True)]
 
 
 def code_hashes():
+    """Fingerprint prospective dependencies, excluding unrelated analyses/tests."""
+    script_names = (
+        "final_evaluation.py", "compare_statistical_models.py", "compare_lstm_models.py",
+        "compare_lstm_risk_features.py", "compare_lstm_qlike_objective.py",
+        "analyze_dependence_robust_comparison.py",
+    )
+    paths = [p for p in (ROOT / "src").rglob("*.py")]
+    paths.extend(ROOT / "scripts" / name for name in script_names)
     # Text normalization survives Git's Windows CRLF checkout conversion.
     return {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_text(encoding="utf-8").encode()).hexdigest()
-            for folder in ("src", "scripts") for p in (ROOT / folder).rglob("*.py")}
+            for p in paths}
 
 
 def evaluate(returns, config, plan):
@@ -101,14 +109,16 @@ def main():
     parser.add_argument("--freeze", action="store_true")
     parser.add_argument("--run", action="store_true", help="Only runs once the full prospective period is available.")
     parser.add_argument("--raw", type=Path)
+    parser.add_argument("--protocol", type=Path, default=FREEZE)
     args = parser.parse_args()
+    protocol = args.protocol.resolve()
     cfg = load_research_config()
     raw = args.raw or ROOT / cfg["data"]["raw_path"]
     returns = load_industry_returns(raw)
     environment = {"python": sys.version, "packages": subprocess.check_output(
         [sys.executable, "-m", "pip", "freeze"], text=True)}
     if args.freeze:
-        if args.run or FREEZE.exists():
+        if args.run or protocol.exists():
             raise ValueError("Freeze is immutable; do not replace an existing registration.")
         if returns.index[-1] > pd.Timestamp(cfg["final_evaluation"]["exposed_data_through"]):
             raise ValueError("Exposure boundary must cover all currently inspected data.")
@@ -116,12 +126,12 @@ def main():
                   "environment": environment,
                   "code_sha256": code_hashes(), "source_sha256": hashlib.sha256(raw.read_bytes()).hexdigest(),
                   "historical_returns_sha256": history_digest(returns, cfg["final_evaluation"]["exposed_data_through"])}
-        FREEZE.write_text(json.dumps(record, indent=2), encoding="utf-8")
-        print(f"Frozen protocol: {FREEZE}")
+        protocol.write_text(json.dumps(record, indent=2), encoding="utf-8")
+        print(f"Frozen protocol: {protocol}")
         return
-    if not FREEZE.exists():
+    if not protocol.exists():
         raise FileNotFoundError("Register the protocol with --freeze before evaluating.")
-    frozen = json.loads(FREEZE.read_text())
+    frozen = json.loads(protocol.read_text())
     if frozen["config"] != cfg or frozen["code_sha256"] != code_hashes():
         raise ValueError("Code/config differs from the frozen protocol; document an amendment before proceeding.")
     if frozen["environment"] != environment:

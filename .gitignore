@@ -18,6 +18,11 @@ reports/tables/*
 !reports/tables/research_robustness_metrics.csv
 !reports/tables/research_qlike_comparisons.csv
 !reports/tables/research_report_inputs.json
+!reports/tables/v2_stress_period_metrics.csv
+!reports/tables/v2_rapid_rise_underprediction.csv
+!reports/tables/v2_var_coverage.csv
+!reports/tables/v2_alternative_portfolio_metrics.csv
+!reports/tables/v2_lstm_seed_sensitivity.csv
 *.pt
 *.pth
 *.log

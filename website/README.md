@@ -41,7 +41,7 @@ npm.cmd run build
 
 ## Architecture boundary
 
-The Python project remains the research engine. The web app is a fast presentation layer built from reviewed summary artifacts. Future integration should use a generated JSON export or read-only API rather than running long model-training jobs during a page request.
+The Python project remains the research engine. The web app is a fast presentation layer built from reviewed summary artifacts. `scripts/export_dashboard_data.py` validates the research model set and sample size, then creates `src/data/research.generated.json` for the dashboard. A future read-only API can serve larger histories without running long model-training jobs during a page request.
 
 Recommended scalable additions:
 

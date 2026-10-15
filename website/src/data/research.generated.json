@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "models": [
+    {
+      "model": "GJR-GARCH-Student-t",
+      "family": "Statistical",
+      "nTest": 2520,
+      "mae": 0.0074676779004441,
+      "rmse": 0.0111292795784509,
+      "qlike": 0.4191913297020014
+    },
+    {
+      "model": "GARCH-Student-t",
+      "family": "Statistical",
+      "nTest": 2520,
+      "mae": 0.0078281723194489,
+      "rmse": 0.0115896152294667,
+      "qlike": 0.423977599674703
+    },
+    {
+      "model": "GARCH-normal",
+      "family": "Statistical",
+      "nTest": 2520,
+      "mae": 0.007779454544013,
+      "rmse": 0.0115048192554655,
+      "qlike": 0.4292265146587124
+    },
+    {
+      "model": "Regime-switching",
+      "family": "Regime",
+      "nTest": 2520,
+      "mae": 0.0075369641679013,
+      "rmse": 0.0112462289667072,
+      "qlike": 0.4377121786733629
+    },
+    {
+      "model": "EWMA",
+      "family": "Baseline",
+      "nTest": 2520,
+      "mae": 0.0080976724651399,
+      "rmse": 0.0126934125137184,
+      "qlike": 0.4652398918968844
+    },
+    {
+      "model": "Rolling",
+      "family": "Baseline",
+      "nTest": 2520,
+      "mae": 0.0081933792110746,
+      "rmse": 0.013207885665886,
+      "qlike": 0.5147820548404353
+    },
+    {
+      "model": "QLIKE-objective Risk-feature + regime LSTM",
+      "family": "Neural",
+      "nTest": 2520,
+      "mae": 0.0083282305370586,
+      "rmse": 0.0143482697057684,
+      "qlike": 0.6418753800977759
+    },
+    {
+      "model": "Risk-feature + regime LSTM",
+      "family": "Neural",
+      "nTest": 2520,
+      "mae": 0.0074994449854077,
+      "rmse": 0.0141946202305265,
+      "qlike": 0.6970737195580796
+    },
+    {
+      "model": "Risk-feature LSTM",
+      "family": "Neural",
+      "nTest": 2520,
+      "mae": 0.0076517190144079,
+      "rmse": 0.0146857631072838,
+      "qlike": 0.8033218941275031
+    },
+    {
+      "model": "LSTM",
+      "family": "Neural",
+      "nTest": 2520,
+      "mae": 0.0081889578538797,
+      "rmse": 0.0150117760115878,
+      "qlike": 0.8964973809159307
+    },
+    {
+      "model": "Regime-aware LSTM",
+      "family": "Neural",
+      "nTest": 2520,
+      "mae": 0.0079316212405304,
+      "rmse": 0.0150432222364384,
+      "qlike": 0.915364851133299
+    }
+  ],
+  "stressPeriods": [
+    {
+      "period": "normal",
+      "n": 2242,
+      "qlike": 0.4029778100617376,
+      "rmse": 0.0092639980617124,
+      "underprediction_rate": 0.3189116859946476,
+      "model": "GJR-GARCH-Student-t",
+      "mae": 0.0068063754397371
+    },
+    {
+      "period": "normal",
+      "n": 2242,
+      "qlike": 0.4869410119487335,
+      "rmse": 0.0092284152068342,
+      "underprediction_rate": 0.4937555753791258,
+      "model": "Risk-feature + regime LSTM",
+      "mae": 0.0061981075061572
+    },
+    {
+      "period": "high_volatility",
+      "n": 216,
+      "qlike": 0.4034065976258058,
+      "rmse": 0.0128944361306862,
+      "underprediction_rate": 0.3981481481481481,
+      "model": "GJR-GARCH-Student-t",
+      "mae": 0.009142584775702
+    },
+    {
+      "period": "high_volatility",
+      "n": 216,
+      "qlike": 0.7486102787141685,
+      "rmse": 0.0128338086864347,
+      "underprediction_rate": 0.7129629629629629,
+      "model": "Risk-feature + regime LSTM",
+      "mae": 0.0086518693024013
+    },
+    {
+      "period": "2020_shock",
+      "n": 62,
+      "qlike": 1.0604850903782883,
+      "rmse": 0.0367650901310442,
+      "underprediction_rate": 0.4354838709677419,
+      "model": "GJR-GARCH-Student-t",
+      "mae": 0.0255460687367256
+    },
+    {
+      "period": "2020_shock",
+      "n": 62,
+      "qlike": 8.116196843468378,
+      "rmse": 0.0673501108910775,
+      "underprediction_rate": 0.8870967741935484,
+      "model": "Risk-feature + regime LSTM",
+      "mae": 0.0505425897597494
+    }
+  ]
+}

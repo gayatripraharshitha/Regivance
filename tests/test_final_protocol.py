@@ -109,12 +109,12 @@ def test_registration_and_pending_gate_do_not_fit_models(tmp_path, monkeypatch, 
     monkeypatch.setattr(command, "load_industry_returns", lambda path: returns)
     monkeypatch.setattr(command, "code_hashes", lambda: {"model.py": "original"})
     monkeypatch.setattr(command, "evaluate", lambda *args: pytest.fail("Cannot fit without future data"))
-    monkeypatch.setattr(command.sys, "argv", ["final_evaluation.py", "--freeze", "--raw", str(raw)])
+    monkeypatch.setattr(command.sys, "argv", ["final_evaluation.py", "--freeze", "--protocol", str(command.FREEZE), "--raw", str(raw)])
     command.main()
     assert command.FREEZE.is_file()
     with pytest.raises(ValueError, match="immutable"):
         command.main()
-    monkeypatch.setattr(command.sys, "argv", ["final_evaluation.py", "--run", "--raw", str(raw)])
+    monkeypatch.setattr(command.sys, "argv", ["final_evaluation.py", "--run", "--protocol", str(command.FREEZE), "--raw", str(raw)])
     command.main()
     assert "awaiting_future_data" in capsys.readouterr().out
     monkeypatch.setattr(command, "code_hashes", lambda: {"model.py": "edited"})

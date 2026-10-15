@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { PageIntro } from "../components/ui/PageIntro";
 import { MetricChart } from "../components/charts/MetricChart";
-import { modelResults } from "../data/research";
+import { modelResults, stressPeriods } from "../data/research";
 
 export function ModelResults() {
   const [metric, setMetric] = useState("qlike");
@@ -21,5 +21,9 @@ export function ModelResults() {
       <div className="table-wrap"><table><thead><tr><th>Rank</th><th>Model · select to inspect</th><th>Family</th><th>MAE</th><th>RMSE</th><th>QLIKE</th></tr></thead><tbody>{sorted.map((row,i)=><tr key={row.model} className={selected.model===row.model?"selected-row":""}><td>{String(i+1).padStart(2,"0")}</td><td><button className="model-select" aria-pressed={selected.model===row.model} onClick={()=>setSelected(row)}>{row.model}</button></td><td><span className={`family ${row.family.toLowerCase()}`}>{row.family}</span></td><td>{row.mae.toFixed(6)}</td><td>{row.rmse.toFixed(6)}</td><td>{row.qlike.toFixed(6)}</td></tr>)}</tbody></table></div>
     </> : <div className="empty-state"><h3>No matching models</h3><button className="button" onClick={()=>{setFamily("All");setQuery("");}}>Reset filters</button></div>}
     <section className="model-detail" aria-label="Selected model details"><span className="eyebrow">Selected model</span><h3>{selected.model}</h3><p>{selected.family} · 2,520 development origins</p><div>{["mae","rmse","qlike"].map(key=><span key={key}><small>{key.toUpperCase()}</small><strong>{selected[key].toFixed(6)}</strong></span>)}</div></section>
+    <section className="stress-section"><span className="eyebrow">Stress transparency</span><h2>Performance changes when volatility rises.</h2><p>These groups are mutually exclusive. “Normal” combines lower and middle regimes outside February–April 2020; “high volatility” is the higher regime outside that shock window.</p>
+      <div className="table-wrap"><table><thead><tr><th>Period</th><th>Model</th><th>Origins</th><th>QLIKE</th><th>Underpredicted</th></tr></thead><tbody>{stressPeriods.map(row=><tr key={`${row.period}-${row.model}`}><td>{row.period.replaceAll("_", " ")}</td><td>{row.model}</td><td>{row.n}</td><td>{row.qlike.toFixed(4)}</td><td>{(100*row.underprediction_rate).toFixed(1)}%</td></tr>)}</tbody></table></div>
+      <p className="stress-note">The risk-plus-regime LSTM underpredicted 88.7% of 2020 shock origins and reached QLIKE 8.12, compared with 1.06 for GJR-GARCH. This is the main observed failure mode.</p>
+    </section>
   </section>;
 }

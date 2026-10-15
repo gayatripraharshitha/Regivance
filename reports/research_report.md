@@ -89,6 +89,12 @@ confirmatory tests. The bootstrap conditions on saved predictions; it does not a
 for all model-selection or training-seed uncertainty. See `forecast_failure_attribution.md`
 and `preprocessing_and_diagnostics.md` for concentration, calibration and timing checks.
 
+## V2 stress and practical-risk extensions
+
+The optional `scripts/run_v2.py` workflow adds analyses selected after the original development study. It reports mutually exclusive normal, higher-volatility and 2020-shock groups; relates underprediction to rapid target-volatility increases; demonstrates five-observation Normal VaR coverage; reruns established benchmarks on a lagged inverse-volatility industry portfolio; and measures LSTM initialization sensitivity on a fixed eight-fold subset with five seeds.
+
+The clearest finding is shock sensitivity: during the exclusive February–April 2020 group, the risk-feature-plus-regime LSTM underpredicts 88.7% of origins and has QLIKE 8.1162, compared with 43.5% and 1.0605 for Student-t GJR-GARCH. The V2 analyses strengthen failure diagnosis and practical interpretation without changing the original development claim. See [V2 risk analysis](v2_risk_analysis.md) and [V2 seed sensitivity](v2_lstm_seed_sensitivity.md).
+
 ## Prospective evaluation and limitations
 
 All available dates have informed development. No historical split is relabeled untouched.
@@ -100,11 +106,11 @@ It refuses incomplete periods, protocol drift and output replacement. QLIKE agai
 GJR-GARCH is primary; other losses and regimes are secondary. Later folds may refit
 using earlier final-period observations, as prescribed before scoring begins.
 
-The run cannot supply future market observations today. Confirmatory conclusions remain
-pending. Further limitations: a single portfolio/data vintage, overlapping targets,
-historical source revisions, relative cluster instability, unoptimized small networks,
-one seed per fold (not a multi-seed generalization claim), and no transaction-cost,
-portfolio-allocation or economic-utility experiment. No causal claim about regimes is made.
+The run cannot supply future market observations today. Confirmatory conclusions remain pending.
+
+Scientific validation still needed includes prospective outcomes, additional independent datasets and portfolio constructions, broader multi-seed/full-fold neural evaluation, crisis-specific validation, and decision/economic-utility testing. The V2 subset and alternative portfolio are sensitivity checks rather than complete generalization evidence.
+
+Engineering extensions still needed include end-to-end artifact publication, a read-only API for larger forecast histories, broader browser CI, deployment automation, observability, and performance/load validation. No causal claim about regimes is made.
 
 ## Reproduction and deliverables
 

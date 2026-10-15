@@ -38,4 +38,6 @@ test("results combine filters, recover from no matches and inspect a model", asy
   expect(screen.getByRole("status")).toHaveTextContent("ranked by MAE");
   fireEvent.click(screen.getByRole("button", { name: "EWMA", exact: true }));
   expect(within(screen.getByRole("region", { name: "Selected model details" })).getByRole("heading")).toHaveTextContent("EWMA");
+  expect(screen.getByText("Stress transparency")).toBeInTheDocument();
+  expect(screen.getByText(/88.7% of 2020 shock origins/)).toBeInTheDocument();
 });

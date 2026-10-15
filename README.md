@@ -6,7 +6,7 @@ Regivance investigates whether market-regime information improves five-observati
 
 Built for academic research, internship demonstrations and portfolio presentation, the repository includes data processing, chronological evaluation, statistical and neural models, diagnostic reports, and a registered prospective evaluation protocol.
 
-[Research report](reports/research_report.md) · [Model scores](reports/tables/research_all_model_metrics.csv) · [Dashboard guide](website/README.md) · [Data contract](docs/data-contract.md) · [Implementation status](docs/implementation-plan.md)
+[Research report](reports/research_report.md) · [V2 assessment](docs/v2-assessment.md) · [Model scores](reports/tables/research_all_model_metrics.csv) · [Dashboard guide](website/README.md) · [Data contract](docs/data-contract.md) · [Implementation status](docs/implementation-plan.md)
 
 ## Contents
 
@@ -25,17 +25,18 @@ Built for academic research, internship demonstrations and portfolio presentatio
 13. [Walk-forward evaluation](#walk-forward-evaluation)
 14. [Metrics and statistical uncertainty](#metrics-and-statistical-uncertainty)
 15. [Reproduced development results](#reproduced-development-results)
-16. [Running the research workflow](#running-the-research-workflow)
-17. [Configuration and reproducibility](#configuration-and-reproducibility)
-18. [Dashboard features and data integration](#dashboard-features-and-data-integration)
-19. [Testing and quality checks](#testing-and-quality-checks)
-20. [Reports and generated artifacts](#reports-and-generated-artifacts)
-21. [Prospective final evaluation](#prospective-final-evaluation)
-22. [Deployment and scaling](#deployment-and-scaling)
-23. [Troubleshooting](#troubleshooting)
-24. [Development workflow](#development-workflow)
-25. [Limitations and future work](#limitations-and-future-work)
-26. [Data attribution and licensing](#data-attribution-and-licensing)
+16. [V2 evidence extensions](#v2-evidence-extensions)
+17. [Running the research workflow](#running-the-research-workflow)
+18. [Configuration and reproducibility](#configuration-and-reproducibility)
+19. [Dashboard features and data integration](#dashboard-features-and-data-integration)
+20. [Testing and quality checks](#testing-and-quality-checks)
+21. [Reports and generated artifacts](#reports-and-generated-artifacts)
+22. [Prospective final evaluation](#prospective-final-evaluation)
+23. [Deployment and scaling](#deployment-and-scaling)
+24. [Troubleshooting](#troubleshooting)
+25. [Development workflow](#development-workflow)
+26. [Limitations and future work](#limitations-and-future-work)
+27. [Data attribution and licensing](#data-attribution-and-licensing)
 
 ## Project overview
 
@@ -69,11 +70,12 @@ Verification baseline: **October 15, 2026**.
 | Full development comparison | Completed: 120 folds, 2,520 origins per model |
 | Regime and neural experiments | Implemented and evaluated |
 | Diagnostics, robustness tables and development report | Generated |
+| V2 shock, rapid-rise, VaR, seed and portfolio analyses | Implemented and reproduced on the development sample |
 | React dashboard | Implemented; production build verified |
 | Local Python tests | 121 passing |
 | Local React tests | 3 passing |
 | Python dependency consistency | Verified with `pip check` |
-| Automated CI configuration | Python tests on Windows and Linux; remote status is separate |
+| Automated CI configuration | Python tests on Windows/Linux plus React tests/build; runs on pushes and pull requests |
 | Prospective evaluation implementation | Implemented, registered and tested on synthetic data |
 | Prospective real-market evidence | Awaiting future observations |
 
@@ -137,7 +139,8 @@ Regivance/
 ├── docs/
 │   ├── data-contract.md             Input, target and timing rules
 │   ├── implementation-plan.md       Delivery status and remaining milestones
-│   └── completion-summary.md        Research implementation change summary
+│   ├── completion-summary.md        Research implementation change summary
+│   └── v2-assessment.md             Review decisions and V2 evidence scope
 ├── src/
 │   ├── data/
 │   │   ├── loader.py                Source-table parsing
@@ -447,6 +450,40 @@ Student-t GJR-GARCH has the best pooled score across all three metrics. Adding r
 
 For full precision and interpretation, consult the [metric table](reports/tables/research_all_model_metrics.csv), [paired QLIKE comparisons](reports/tables/research_qlike_comparisons.csv), [dependence analysis](reports/dependence_robust_comparison.md) and [research report](reports/research_report.md).
 
+## V2 evidence extensions
+
+V2 adds the evidence requested by a quantitative-risk review. These analyses were chosen after inspecting the development results, so they strengthen diagnosis and presentation without becoming new confirmatory evidence.
+
+### Stress-period comparison
+
+The groups below are mutually exclusive: the 2020 shock is February–April 2020; high volatility is the fold-relative higher regime outside that interval; normal combines the lower and middle regimes outside the shock.
+
+| Period | Origins | GJR-GARCH-t QLIKE | Risk + regime LSTM QLIKE | LSTM underprediction rate |
+| --- | ---: | ---: | ---: | ---: |
+| Normal | 2,242 | 0.4030 | 0.4869 | 49.4% |
+| High volatility | 216 | 0.4034 | 0.7486 | 71.3% |
+| February–April 2020 | 62 | 1.0605 | 8.1162 | 88.7% |
+
+The LSTM's weakness is concentrated where risk management matters most. In the most extreme 5% of target-volatility increases, both models underpredict frequently, while the LSTM records the larger QLIKE: 3.0528 versus 1.9791.
+
+### Practical-risk and sensitivity checks
+
+- A zero-mean Normal five-observation VaR demonstration compares forecast volatility with the next five summed portfolio returns. GJR-GARCH is close to nominal 95% coverage (4.96% breaches) but undercovers at 99% (2.50% breaches). The LSTM breaches 7.02% and 3.77%, respectively.
+- Five LSTM seed bases on eight fixed folds produce QLIKE from 2.5192 to 3.4639, demonstrating material initialization sensitivity on the stress-inclusive subset.
+- A lagged 63-observation inverse-volatility industry portfolio provides an additional construction. Student-t GJR-GARCH remains strongest among the three rerun benchmarks, with QLIKE 0.4457.
+- The dashboard model metrics and stress table are exported from verified CSV artifacts by `scripts/export_dashboard_data.py` instead of being manually copied.
+
+Reproduce these extensions after the main development artifacts exist:
+
+```powershell
+.\.venv\Scripts\python.exe -B scripts/run_v2.py
+cd website
+npm.cmd test
+npm.cmd run build
+```
+
+Read [V2 risk analysis](reports/v2_risk_analysis.md) and [V2 seed sensitivity](reports/v2_lstm_seed_sensitivity.md) for definitions and limitations.
+
 ## Running the research workflow
 
 After installing dependencies and placing the source file, run:
@@ -533,7 +570,7 @@ After a new research experiment:
 4. Run the React tests and production build.
 5. Review the changed pages before publishing.
 
-An automatic versioned JSON export or read-only API is a future extension. The decorative signal on the overview is an illustration rather than a historical forecast series. The regime explorer explains ranking semantics rather than classifying a live market.
+The versioned dashboard JSON is generated from verified compact CSV artifacts by `scripts/export_dashboard_data.py`. A read-only API for large forecast histories remains a future extension. The decorative signal on the overview is an illustration rather than a historical forecast series. The regime explorer explains ranking semantics rather than classifying a live market.
 
 ## Testing and quality checks
 
@@ -544,7 +581,7 @@ An automatic versioned JSON export or read-only API is a future extension. The d
 .\.venv\Scripts\python.exe -m pip check
 ```
 
-The current suite contains 121 tests covering portfolio targets, rolling/EWMA/GARCH behavior, feature timing, clustering, chronological splits, metrics, neural sequences/models, diagnostic consistency, reporting, artifact preservation and prospective safeguards.
+The current suite contains 125 tests covering portfolio targets, rolling/EWMA/GARCH behavior, feature timing, clustering, chronological splits, metrics, neural sequences/models, diagnostic consistency, reporting, artifact preservation, prospective safeguards and V2 timing/category contracts.
 
 ### React
 
@@ -560,7 +597,7 @@ The three tests cover initial rendering, persisted theme switching, and combined
 
 ### Continuous integration
 
-[.github/workflows/tests.yml](.github/workflows/tests.yml) runs Python tests on Windows and Linux with Python 3.13 for pushes and pull requests. Web tests/builds currently run locally; automated frontend CI is a future improvement. Local passing checks do not imply a remote CI run has passed.
+[.github/workflows/tests.yml](.github/workflows/tests.yml) runs Python tests on Windows and Linux with Python 3.13, plus React tests and the production web build on Node.js 24, for pushes and pull requests. The earlier remote workflow completed successfully; each V2 push triggers a new run whose status should be checked on GitHub.
 
 ## Reports and generated artifacts
 
@@ -574,6 +611,8 @@ The three tests cover initial rendering, persisted theme switching, and combined
 | [Robustness metrics](reports/tables/research_robustness_metrics.csv) | Year, regime, shock and target-offset checks |
 | [QLIKE comparisons](reports/tables/research_qlike_comparisons.csv) | Paired loss tests against the reference model |
 | [Report input hashes](reports/tables/research_report_inputs.json) | Input fingerprints for report generation |
+| [V2 risk analysis](reports/v2_risk_analysis.md) | Stress, underprediction, VaR and alternative-portfolio evidence |
+| [V2 seed sensitivity](reports/v2_lstm_seed_sensitivity.md) | Five-seed fixed-subset neural stability check |
 | `data/processed/` | Local processed data and statistical predictions |
 | `reports/tables/` | Additional generated predictions and comparison tables |
 | `reports/runs/development/` | Local manifest, package snapshot and stage logs |
@@ -583,7 +622,7 @@ A fresh clone includes the committed report and compact evidence, but not all lo
 
 ## Prospective final evaluation
 
-The registered protocol is stored in [configs/frozen_protocol.json](configs/frozen_protocol.json). It records configuration, normalized Python source fingerprints, historical-return identity and the research environment.
+The original registration is stored in [configs/frozen_protocol.json](configs/frozen_protocol.json). V2 uses `configs/frozen_protocol_v2.json` and narrows fingerprints to the actual prospective dependencies so unrelated reporting additions do not create false protocol drift. The [amendment](docs/protocol-amendment-v2.md) preserves the original and explains the change. Both record configuration, source fingerprints, historical-return identity and the research environment.
 
 All currently available data is considered exposed. The prospective period begins **strictly after October 15, 2026** and requires the first **252 forecast origins plus five target-completion observations**: 257 new source observations.
 

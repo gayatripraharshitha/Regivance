@@ -52,6 +52,10 @@ select,input { font: inherit; color: var(--ink); background: var(--panel); paddi
 .regime-highlight { position: absolute; inset: 0; border-radius: 8px; background: var(--green); }
 .regime-description { min-height: 135px; max-width: 780px; }
 .regime-explorer>small { font-size: 11px; }
+.stress-section { margin-top: 70px; padding-top: 55px; border-top: 1px solid var(--line); }
+.stress-section h2 { font-size: clamp(28px,4vw,46px); letter-spacing: -.04em; }
+.stress-section>p { max-width: 780px; color: var(--muted); line-height: 1.7; }
+.stress-section .stress-note { padding: 20px; border-left: 3px solid var(--amber); background: var(--soft); color: var(--ink); }
 :focus-visible { outline: 3px solid var(--green); outline-offset: 4px; }
 @media(max-width:1000px) { .status-pill { display:none; } .desktop-nav { gap:16px; } }
 @media(max-width:520px) {
