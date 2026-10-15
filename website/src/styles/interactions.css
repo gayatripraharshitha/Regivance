@@ -18,10 +18,6 @@ body { transition: background-color .3s, color .3s; }
 .ambient-grid { position:absolute; inset:0; opacity:.13; background-image:linear-gradient(rgba(245,232,216,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(245,232,216,.035) 1px,transparent 1px); background-size:72px 72px; mask-image:linear-gradient(to bottom,black,transparent 82%); }
 :root[data-theme="light"] .ambient-canvas { background:radial-gradient(ellipse at 85% 8%,#dbe9ff,transparent 35rem),#f5f8ff; }
 :root[data-theme="light"] .ambient-orb,:root[data-theme="light"] .ambient-grid { opacity:0; }
-:root:not([data-theme="light"]) h1,:root:not([data-theme="light"]) h2 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:600; letter-spacing:-.035em; }
-:root:not([data-theme="light"]) h1 { line-height:.92; }
-:root:not([data-theme="light"]) h1 em { background:linear-gradient(115deg,#f3c985,#e07a5f); background-clip:text; -webkit-background-clip:text; color:transparent; }
-:root:not([data-theme="light"]) .eyebrow { color:var(--green); letter-spacing:.22em; }
 .app-shell { position:relative; isolation:isolate; overflow:hidden; }
 .app-shell>main,.app-shell>header,.app-shell>footer,.mobile-nav { position:relative; z-index:1; }
 .topbar { background: var(--header); gap: 22px; }
