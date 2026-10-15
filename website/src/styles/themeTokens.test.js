@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 
-test("Obsidian Ember dark theme keeps distinct semantic colors", () => {
+test("Warm Tones dark theme keeps distinct semantic colors", () => {
   const styles = readFileSync("src/styles/interactions.css", "utf8");
-  const colors = ["#d6a85f", "#c77845", "#a66f7d", "#dfa85a", "#d46157"];
+  const colors = ["#d8a05c", "#e07a5f", "#c98491", "#dda15e", "#d85c4a"];
   colors.forEach((color) => expect(styles).toContain(color));
   expect(new Set(colors).size).toBe(5);
 });
