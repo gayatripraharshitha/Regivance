@@ -2,6 +2,8 @@
 
 React/Vite presentation layer for the Regivance research system. It reads curated, versioned development results and does not retrain models in the browser.
 
+The interaction layer uses Framer Motion for route and ambient animation, Recharts for research visualizations, Lucide for accessible icons, React CountUp for viewport-triggered metrics and React Parallax Tilt for restrained depth on key presentation cards. Reduced-motion preferences disable nonessential movement.
+
 The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. The dedicated **Risk analysis** route visualizes stress degradation, VaR calibration, neural seed sensitivity, rapid-rise underprediction and alternative-portfolio robustness. The **Data lab** route validates a user-selected CSV locally, reproduces the portfolio/target transformations and exports a processed file without uploading source data. Page entrances, hover effects and chart animations respect reduced-motion preferences.
 
 ## Data lab contract

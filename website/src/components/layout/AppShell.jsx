@@ -22,6 +22,7 @@ export function AppShell({ children }) {
   const progress = useSpring(scrollYProgress, { stiffness: 150, damping: 30 });
   return (
     <div className="app-shell">
+      <div className="ambient-canvas" aria-hidden="true"><motion.i className="ambient-orb orb-one" animate={{ x:[0,45,-15,0], y:[0,-25,35,0], scale:[1,1.12,.94,1] }} transition={{ duration:18, repeat:Infinity, ease:"easeInOut" }} /><motion.i className="ambient-orb orb-two" animate={{ x:[0,-35,25,0], y:[0,30,-18,0] }} transition={{ duration:22, repeat:Infinity, ease:"easeInOut" }} /><span className="ambient-grid" /></div>
       <motion.div className="scroll-progress" style={{ scaleX: progress }} />
       <header className="topbar">
         <NavLink to="/" className="brand" onClick={() => setOpen(false)} aria-label="Regivance home">
@@ -43,7 +44,7 @@ export function AppShell({ children }) {
           </motion.nav>
         )}
       </AnimatePresence>
-      <main><motion.div key={pathname} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3 }}>{children}</motion.div></main>
+      <main><motion.div key={pathname} initial={{ opacity: 0, y: 16, filter:"blur(3px)" }} animate={{ opacity: 1, y: 0, filter:"blur(0px)" }} transition={{ duration: .42, ease:[.22,1,.36,1] }}>{children}</motion.div></main>
       <footer><span>Regivance · quantitative research system</span><span>Research only — not investment advice</span></footer>
     </div>
   );

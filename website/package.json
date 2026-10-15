@@ -13,11 +13,13 @@
     "@vitejs/plugin-react": "latest",
     "framer-motion": "latest",
     "lucide-react": "latest",
-    "recharts": "latest",
-    "vite": "latest",
     "react": "latest",
+    "react-countup": "^6.5.3",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-parallax-tilt": "^1.7.321",
+    "react-router-dom": "latest",
+    "recharts": "latest",
+    "vite": "latest"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "latest",

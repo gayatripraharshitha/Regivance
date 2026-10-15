@@ -10,7 +10,7 @@ beforeEach(() => { cleanup(); localStorage.clear(); });
 test("renders the research question and verified test count", async () => {
   render(<MemoryRouter><App /></MemoryRouter>);
   expect(await screen.findByText(/Markets change shape/i)).toBeInTheDocument();
-  expect(screen.getByText("121")).toBeInTheDocument();
+  expect(screen.getByLabelText("125")).toBeInTheDocument();
 });
 
 test("theme defaults to light, switches and persists across remounts", async () => {

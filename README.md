@@ -474,6 +474,7 @@ The LSTM's weakness is concentrated where risk management matters most. In the m
 - The dashboard model metrics and stress table are exported from verified CSV artifacts by `scripts/export_dashboard_data.py` instead of being manually copied.
 - The `/risk` dashboard route presents stress-period deterioration, VaR calibration, five-seed neural sensitivity, rapid-rise underprediction and inverse-volatility portfolio robustness. Its download controls link directly to the versioned V2 evidence tables.
 - The `/lab` route offers a browser-local CSV workflow. It validates chronological return data, constructs an equal-weighted portfolio, reproduces the 21-observation trailing volatility and five-observation forward target, charts the result and exports a processed CSV. It does not upload data or claim to perform model inference.
+- The V2 presentation layer uses a midnight-blue/cyan dark theme with animated ambient depth, live metric transitions and restrained tilt interactions. Framer Motion, Recharts, Lucide, React CountUp and React Parallax Tilt are used with reduced-motion support.
 
 Reproduce these extensions after the main development artifacts exist:
 
