@@ -7,6 +7,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "reports/tables/research_all_model_metrics.csv"
 OUTPUT = ROOT / "website/src/data/research.generated.json"
 STRESS_SOURCE = ROOT / "reports/tables/v2_stress_period_metrics.csv"
+VAR_SOURCE = ROOT / "reports/tables/v2_var_coverage.csv"
+SEED_SOURCE = ROOT / "reports/tables/v2_lstm_seed_sensitivity.csv"
+PORTFOLIO_SOURCE = ROOT / "reports/tables/v2_alternative_portfolio_metrics.csv"
+RISE_SOURCE = ROOT / "reports/tables/v2_rapid_rise_underprediction.csv"
 
 FAMILIES = {
     "Rolling": "Baseline", "EWMA": "Baseline", "GARCH-normal": "Statistical",
@@ -15,6 +19,13 @@ FAMILIES = {
     "Risk-feature LSTM": "Neural", "Risk-feature + regime LSTM": "Neural",
     "QLIKE-objective Risk-feature + regime LSTM": "Neural",
 }
+
+
+def _records(path, required):
+    data = pd.read_csv(path)
+    if not required.issubset(data.columns):
+        raise ValueError(f"{path.name} schema differs from the dashboard contract.")
+    return data.to_dict(orient="records")
 
 
 def export(source=SOURCE, output=OUTPUT, stress_source=STRESS_SOURCE):
@@ -35,8 +46,14 @@ def export(source=SOURCE, output=OUTPUT, stress_source=STRESS_SOURCE):
             raise ValueError("Stress metric schema differs from the dashboard contract.")
         stress_records = stress[list(stress_required)].to_dict(orient="records")
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps({"schemaVersion": 1, "models": records,
-        "stressPeriods": stress_records}, indent=2), encoding="utf-8")
+    risk = {
+        "varCoverage": _records(VAR_SOURCE, {"model", "confidence", "sample", "n", "breaches", "expected_breach_rate", "observed_breach_rate", "exact_binomial_p_value"}),
+        "seedSensitivity": _records(SEED_SOURCE, {"seed_base", "n_folds", "n_test", "mae", "rmse", "qlike"}),
+        "alternativePortfolio": _records(PORTFOLIO_SOURCE, {"portfolio", "model", "n", "mae", "rmse", "qlike"}),
+        "rapidRise": _records(RISE_SOURCE, {"rise_bucket", "model", "n", "underprediction_rate", "mae", "rmse", "qlike"}),
+    }
+    output.write_text(json.dumps({"schemaVersion": 2, "models": records,
+        "stressPeriods": stress_records, **risk}, indent=2), encoding="utf-8")
     return records
 
 

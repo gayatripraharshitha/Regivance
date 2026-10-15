@@ -56,8 +56,56 @@ select,input { font: inherit; color: var(--ink); background: var(--panel); paddi
 .stress-section h2 { font-size: clamp(28px,4vw,46px); letter-spacing: -.04em; }
 .stress-section>p { max-width: 780px; color: var(--muted); line-height: 1.7; }
 .stress-section .stress-note { padding: 20px; border-left: 3px solid var(--amber); background: var(--soft); color: var(--ink); }
+.risk-page em { color: var(--green); font-style: normal; }
+.risk-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 55px 0 90px; }
+.risk-summary article,.calibration-grid article,.portfolio-cards article { position: relative; padding: 25px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg,var(--panel),var(--soft)); }
+.risk-summary svg { color: var(--green); margin-bottom: 24px; }
+.risk-summary span,.mini-stat span { display: block; color: var(--muted); font-size: 12px; }
+.risk-summary strong { display: block; margin: 8px 0; font: 500 27px "DM Mono",monospace; }
+.risk-summary small,.calibration-grid small,.portfolio-cards small { color: var(--muted); }
+.risk-block { padding: 80px 0; border-top: 1px solid var(--line); }
+.risk-heading { display: flex; align-items: end; justify-content: space-between; gap: 45px; margin-bottom: 35px; }
+.risk-heading>div:first-child { max-width: 760px; }
+.risk-heading h2,.research-verdict h2 { margin: 12px 0; font-size: clamp(30px,4vw,48px); letter-spacing: -.04em; }
+.risk-heading p,.research-verdict p { color: var(--muted); line-height: 1.7; }
+.risk-heading .metric-switch { flex: none; margin: 0; }
+.risk-chart { height: 430px; padding: 25px 15px 15px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+.risk-chart.compact { height: 330px; }
+.research-tooltip { display: grid; gap: 7px; padding: 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); font: 11px "DM Mono",monospace; box-shadow: 0 10px 30px #0002; }
+.research-tooltip strong { color: var(--ink); }
+.evidence-note { display: flex; align-items: flex-start; gap: 15px; max-width: 880px; margin: 25px 0; padding: 19px; background: var(--soft); border-left: 3px solid var(--amber); }
+.evidence-note svg { flex: none; color: var(--amber); }
+.evidence-note p { margin: 0; line-height: 1.6; }
+.download-link { width: fit-content; margin-top: 20px; }
+.calibration-grid,.portfolio-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin-top: 18px; }
+.calibration-grid article { display: grid; gap: 7px; }
+.calibration-grid strong,.portfolio-cards strong,.mini-stat strong { font: 500 30px "DM Mono",monospace; color: var(--green); }
+.calibration-grid i { width: fit-content; margin-top: 9px; padding: 5px 8px; border-radius: 99px; font: normal 10px "DM Mono",monospace; }
+.calibration-grid i.pass { background: color-mix(in srgb,var(--green) 15%,transparent); color: var(--green); }
+.calibration-grid i.fail { background: color-mix(in srgb,var(--amber) 16%,transparent); color: var(--amber); }
+.mini-stat { min-width: 150px; padding: 17px; border-left: 2px solid var(--green); }
+.range-caption { color: var(--muted); }
+.range-caption strong { color: var(--ink); }
+.rise-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.rise-grid article { padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.rise-grid span,.portfolio-cards span { display: block; min-height: 38px; color: var(--muted); font-size: 12px; }
+.rise-grid strong { display: block; margin: 10px 0 5px; font: 500 28px "DM Mono",monospace; }
+.rise-grid small { color: var(--muted); }
+.rise-grid div { height: 5px; margin-top: 20px; overflow: hidden; border-radius: 9px; background: var(--soft); }
+.rise-grid i { display: block; height: 100%; border-radius: inherit; background: var(--amber); }
+.portfolio-cards { grid-template-columns: repeat(3,1fr); }
+.portfolio-cards article { display: grid; gap: 8px; }
+.portfolio-cards article.best { border-color: var(--green); }
+.portfolio-cards b { position: absolute; top: 15px; right: 15px; color: var(--green); font: 10px "DM Mono",monospace; text-transform: uppercase; }
+.research-verdict { margin-top: 45px; padding: clamp(28px,5vw,60px); border: 1px solid var(--green); border-radius: 22px; background: linear-gradient(135deg,var(--soft),var(--panel)); }
+.research-verdict p { max-width: 850px; }
 :focus-visible { outline: 3px solid var(--green); outline-offset: 4px; }
 @media(max-width:1000px) { .status-pill { display:none; } .desktop-nav { gap:16px; } }
+@media(max-width:850px) {
+  .risk-summary,.portfolio-cards { grid-template-columns: 1fr; }
+  .risk-heading { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .rise-grid { grid-template-columns: 1fr 1fr; }
+}
 @media(max-width:520px) {
   .topbar { padding-inline:14px; gap:12px; }
   .brand { letter-spacing:.1em; font-size:11px; }
@@ -65,6 +113,11 @@ select,input { font: inherit; color: var(--ink); background: var(--panel); paddi
   .theme-toggle { padding:9px; }
   .results-controls { align-items:stretch; flex-direction:column; }
   .model-detail,.regime-explorer { padding:20px; }
+  .risk-summary,.calibration-grid,.rise-grid { grid-template-columns:1fr; }
+  .risk-block { padding:55px 0; }
+  .risk-chart { height:370px; padding:12px 4px; }
+  .risk-heading .metric-switch { width:100%; }
+  .risk-heading .metric-switch button { flex:1; }
 }
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }

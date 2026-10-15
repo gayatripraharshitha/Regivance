@@ -2,6 +2,10 @@ import generated from "./research.generated.json";
 
 export const modelResults = generated.models;
 export const stressPeriods = generated.stressPeriods;
+export const varCoverage = generated.varCoverage;
+export const seedSensitivity = generated.seedSensitivity;
+export const alternativePortfolio = generated.alternativePortfolio;
+export const rapidRise = generated.rapidRise;
 
 export const regimeFeatures = [
   { title: "Portfolio volatility", formula: "21-observation RMS", body: "Measures the recent amplitude of equal-industry portfolio returns." },

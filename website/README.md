@@ -2,7 +2,7 @@
 
 React/Vite presentation layer for the Regivance research system. It reads curated, versioned development results and does not retrain models in the browser.
 
-The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. Page entrances, hover effects and chart animations respect reduced-motion preferences.
+The default appearance is white with blue accents. The navigation theme switch restores a saved light/dark preference. Results include metric switching, family filters, model search and individual model inspection. The feature page includes an animated regime explainer. The dedicated **Risk analysis** route visualizes stress degradation, VaR calibration, neural seed sensitivity, rapid-rise underprediction and alternative-portfolio robustness. Page entrances, hover effects and chart animations respect reduced-motion preferences.
 
 ## Structure
 
@@ -41,7 +41,7 @@ npm.cmd run build
 
 ## Architecture boundary
 
-The Python project remains the research engine. The web app is a fast presentation layer built from reviewed summary artifacts. `scripts/export_dashboard_data.py` validates the research model set and sample size, then creates `src/data/research.generated.json` for the dashboard. A future read-only API can serve larger histories without running long model-training jobs during a page request.
+The Python project remains the research engine. The web app is a fast presentation layer built from reviewed summary artifacts. `scripts/export_dashboard_data.py` validates the research model set, sample size and V2 evidence-table schemas, then creates `src/data/research.generated.json` for the dashboard. A future read-only API can serve larger histories without running long model-training jobs during a page request.
 
 Recommended scalable additions:
 

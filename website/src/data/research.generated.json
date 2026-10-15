@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "models": [
     {
       "model": "GJR-GARCH-Student-t",
@@ -92,58 +92,298 @@
   ],
   "stressPeriods": [
     {
-      "period": "normal",
-      "n": 2242,
       "qlike": 0.4029778100617376,
-      "rmse": 0.0092639980617124,
       "underprediction_rate": 0.3189116859946476,
+      "mae": 0.0068063754397371,
       "model": "GJR-GARCH-Student-t",
-      "mae": 0.0068063754397371
-    },
-    {
-      "period": "normal",
       "n": 2242,
+      "rmse": 0.0092639980617124,
+      "period": "normal"
+    },
+    {
       "qlike": 0.4869410119487335,
-      "rmse": 0.0092284152068342,
       "underprediction_rate": 0.4937555753791258,
+      "mae": 0.0061981075061572,
       "model": "Risk-feature + regime LSTM",
-      "mae": 0.0061981075061572
+      "n": 2242,
+      "rmse": 0.0092284152068342,
+      "period": "normal"
     },
     {
-      "period": "high_volatility",
-      "n": 216,
       "qlike": 0.4034065976258058,
-      "rmse": 0.0128944361306862,
       "underprediction_rate": 0.3981481481481481,
+      "mae": 0.009142584775702,
       "model": "GJR-GARCH-Student-t",
-      "mae": 0.009142584775702
-    },
-    {
-      "period": "high_volatility",
       "n": 216,
+      "rmse": 0.0128944361306862,
+      "period": "high_volatility"
+    },
+    {
       "qlike": 0.7486102787141685,
-      "rmse": 0.0128338086864347,
       "underprediction_rate": 0.7129629629629629,
+      "mae": 0.0086518693024013,
       "model": "Risk-feature + regime LSTM",
-      "mae": 0.0086518693024013
+      "n": 216,
+      "rmse": 0.0128338086864347,
+      "period": "high_volatility"
     },
     {
-      "period": "2020_shock",
-      "n": 62,
       "qlike": 1.0604850903782883,
-      "rmse": 0.0367650901310442,
       "underprediction_rate": 0.4354838709677419,
+      "mae": 0.0255460687367256,
       "model": "GJR-GARCH-Student-t",
-      "mae": 0.0255460687367256
+      "n": 62,
+      "rmse": 0.0367650901310442,
+      "period": "2020_shock"
     },
     {
-      "period": "2020_shock",
-      "n": 62,
       "qlike": 8.116196843468378,
-      "rmse": 0.0673501108910775,
       "underprediction_rate": 0.8870967741935484,
+      "mae": 0.0505425897597494,
       "model": "Risk-feature + regime LSTM",
-      "mae": 0.0505425897597494
+      "n": 62,
+      "rmse": 0.0673501108910775,
+      "period": "2020_shock"
+    }
+  ],
+  "varCoverage": [
+    {
+      "model": "GJR-GARCH-Student-t",
+      "confidence": 0.95,
+      "sample": "overlapping_all",
+      "n": 2520,
+      "breaches": 125,
+      "expected_breach_rate": 0.05,
+      "observed_breach_rate": 0.0496031746031746,
+      "exact_binomial_p_value": 0.9635602823225884
+    },
+    {
+      "model": "GJR-GARCH-Student-t",
+      "confidence": 0.95,
+      "sample": "nonoverlapping_offset_0",
+      "n": 504,
+      "breaches": 25,
+      "expected_breach_rate": 0.05,
+      "observed_breach_rate": 0.0496031746031746,
+      "exact_binomial_p_value": 1.0
+    },
+    {
+      "model": "GJR-GARCH-Student-t",
+      "confidence": 0.99,
+      "sample": "overlapping_all",
+      "n": 2520,
+      "breaches": 63,
+      "expected_breach_rate": 0.01,
+      "observed_breach_rate": 0.025,
+      "exact_binomial_p_value": 1.4734311602513744e-10
+    },
+    {
+      "model": "GJR-GARCH-Student-t",
+      "confidence": 0.99,
+      "sample": "nonoverlapping_offset_0",
+      "n": 504,
+      "breaches": 14,
+      "expected_breach_rate": 0.01,
+      "observed_breach_rate": 0.0277777777777777,
+      "exact_binomial_p_value": 0.0006977565206287
+    },
+    {
+      "model": "Risk-feature + regime LSTM",
+      "confidence": 0.95,
+      "sample": "overlapping_all",
+      "n": 2520,
+      "breaches": 177,
+      "expected_breach_rate": 0.05,
+      "observed_breach_rate": 0.0702380952380952,
+      "exact_binomial_p_value": 1.0794739335490882e-05
+    },
+    {
+      "model": "Risk-feature + regime LSTM",
+      "confidence": 0.95,
+      "sample": "nonoverlapping_offset_0",
+      "n": 504,
+      "breaches": 38,
+      "expected_breach_rate": 0.05,
+      "observed_breach_rate": 0.0753968253968253,
+      "exact_binomial_p_value": 0.0136003299708701
+    },
+    {
+      "model": "Risk-feature + regime LSTM",
+      "confidence": 0.99,
+      "sample": "overlapping_all",
+      "n": 2520,
+      "breaches": 95,
+      "expected_breach_rate": 0.01,
+      "observed_breach_rate": 0.0376984126984126,
+      "exact_binomial_p_value": 7.62779844082287e-27
+    },
+    {
+      "model": "Risk-feature + regime LSTM",
+      "confidence": 0.99,
+      "sample": "nonoverlapping_offset_0",
+      "n": 504,
+      "breaches": 23,
+      "expected_breach_rate": 0.01,
+      "observed_breach_rate": 0.0456349206349206,
+      "exact_binomial_p_value": 3.309192072117768e-09
+    }
+  ],
+  "seedSensitivity": [
+    {
+      "seed_base": 7,
+      "n_folds": 8,
+      "n_test": 168,
+      "mae": 0.0155879062921961,
+      "rmse": 0.0362639578671596,
+      "qlike": 3.0945923780726696
+    },
+    {
+      "seed_base": 42,
+      "n_folds": 8,
+      "n_test": 168,
+      "mae": 0.015349574420335,
+      "rmse": 0.0356546404764141,
+      "qlike": 2.519233177988046
+    },
+    {
+      "seed_base": 101,
+      "n_folds": 8,
+      "n_test": 168,
+      "mae": 0.0155244206211396,
+      "rmse": 0.0358682628091542,
+      "qlike": 2.713847438996015
+    },
+    {
+      "seed_base": 202,
+      "n_folds": 8,
+      "n_test": 168,
+      "mae": 0.015914965493028,
+      "rmse": 0.0369774211026542,
+      "qlike": 3.4639059601576214
+    },
+    {
+      "seed_base": 999,
+      "n_folds": 8,
+      "n_test": 168,
+      "mae": 0.015569933296536,
+      "rmse": 0.0362983645198276,
+      "qlike": 3.1469820093623104
+    }
+  ],
+  "alternativePortfolio": [
+    {
+      "portfolio": "lagged_63d_inverse_industry_volatility",
+      "model": "Rolling",
+      "n": 2520,
+      "mae": 0.007708787867912,
+      "rmse": 0.0127245675329582,
+      "qlike": 0.5455165047532754
+    },
+    {
+      "portfolio": "lagged_63d_inverse_industry_volatility",
+      "model": "EWMA",
+      "n": 2520,
+      "mae": 0.0076546068442208,
+      "rmse": 0.0122435020395018,
+      "qlike": 0.4937140053042486
+    },
+    {
+      "portfolio": "lagged_63d_inverse_industry_volatility",
+      "model": "GJR-GARCH-Student-t",
+      "n": 2520,
+      "mae": 0.0070742130646808,
+      "rmse": 0.0106578159270989,
+      "qlike": 0.4456818961809289
+    }
+  ],
+  "rapidRise": [
+    {
+      "rise_bucket": "stable_or_falling",
+      "model": "GJR-GARCH-Student-t",
+      "n": 1260,
+      "median_target_to_trailing_vol": 0.6949906688073151,
+      "underprediction_rate": 0.0674603174603174,
+      "median_forecast_to_actual": 1.5467903384668054,
+      "mae": 0.0082849170526241,
+      "rmse": 0.0104234921403806,
+      "qlike": 0.41514862226754
+    },
+    {
+      "rise_bucket": "stable_or_falling",
+      "model": "Risk-feature + regime LSTM",
+      "n": 1260,
+      "median_target_to_trailing_vol": 0.6949906688073151,
+      "underprediction_rate": 0.3007936507936508,
+      "median_forecast_to_actual": 1.2153320556508125,
+      "mae": 0.0059775325574646,
+      "rmse": 0.0105714255099225,
+      "qlike": 0.4316760638374121
+    },
+    {
+      "rise_bucket": "moderate_rise",
+      "model": "GJR-GARCH-Student-t",
+      "n": 756,
+      "median_target_to_trailing_vol": 1.2049312813676218,
+      "underprediction_rate": 0.4444444444444444,
+      "median_forecast_to_actual": 1.0310877939409857,
+      "mae": 0.0041530652329422,
+      "rmse": 0.0056722161011109,
+      "qlike": 0.1223674373978969
+    },
+    {
+      "rise_bucket": "moderate_rise",
+      "model": "Risk-feature + regime LSTM",
+      "n": 756,
+      "median_target_to_trailing_vol": 1.2049312813676218,
+      "underprediction_rate": 0.6825396825396826,
+      "median_forecast_to_actual": 0.8584367383899643,
+      "mae": 0.0067058796490274,
+      "rmse": 0.0118020880416209,
+      "qlike": 0.4158779862352246
+    },
+    {
+      "rise_bucket": "large_rise",
+      "model": "GJR-GARCH-Student-t",
+      "n": 378,
+      "median_target_to_trailing_vol": 1.868463503187736,
+      "underprediction_rate": 0.7777777777777778,
+      "median_forecast_to_actual": 0.8060466398847437,
+      "mae": 0.0086829650472671,
+      "rmse": 0.015297821601956,
+      "qlike": 0.5063413086004755
+    },
+    {
+      "rise_bucket": "large_rise",
+      "model": "Risk-feature + regime LSTM",
+      "n": 378,
+      "median_target_to_trailing_vol": 1.868463503187736,
+      "underprediction_rate": 0.8174603174603174,
+      "median_forecast_to_actual": 0.733399735283776,
+      "mae": 0.0112584318590003,
+      "rmse": 0.0221486251290589,
+      "qlike": 1.3588734315521978
+    },
+    {
+      "rise_bucket": "extreme_rise",
+      "model": "GJR-GARCH-Student-t",
+      "n": 126,
+      "median_target_to_trailing_vol": 3.1260571771376857,
+      "underprediction_rate": 0.8968253968253969,
+      "median_forecast_to_actual": 0.5456562243373189,
+      "mae": 0.0155371009431868,
+      "rmse": 0.0222623256740775,
+      "qlike": 1.97911182117582
+    },
+    {
+      "rise_bucket": "extreme_rise",
+      "model": "Risk-feature + regime LSTM",
+      "n": 126,
+      "median_target_to_trailing_vol": 3.1260571771376857,
+      "underprediction_rate": 0.8888888888888888,
+      "median_forecast_to_actual": 0.5741719812757342,
+      "mae": 0.0162030006623433,
+      "rmse": 0.0245921535958786,
+      "qlike": 3.052825540719529
     }
   ]
 }

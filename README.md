@@ -472,6 +472,7 @@ The LSTM's weakness is concentrated where risk management matters most. In the m
 - Five LSTM seed bases on eight fixed folds produce QLIKE from 2.5192 to 3.4639, demonstrating material initialization sensitivity on the stress-inclusive subset.
 - A lagged 63-observation inverse-volatility industry portfolio provides an additional construction. Student-t GJR-GARCH remains strongest among the three rerun benchmarks, with QLIKE 0.4457.
 - The dashboard model metrics and stress table are exported from verified CSV artifacts by `scripts/export_dashboard_data.py` instead of being manually copied.
+- The `/risk` dashboard route presents stress-period deterioration, VaR calibration, five-seed neural sensitivity, rapid-rise underprediction and inverse-volatility portfolio robustness. Its download controls link directly to the versioned V2 evidence tables.
 
 Reproduce these extensions after the main development artifacts exist:
 
@@ -668,11 +669,11 @@ The modular structure provides a starting point for growth, but production scala
 
 | Extension | Purpose | Current state |
 | --- | --- | --- |
-| Versioned JSON export | Synchronize reviewed Python artifacts with the dashboard | Planned |
+| Versioned JSON export | Synchronize reviewed Python artifacts with the dashboard | Implemented for model and V2 risk summaries |
 | Read-only Python API | Serve filtered forecast history and experiment metadata | Planned |
 | Background job queue | Execute long experiments outside browser requests | Planned |
 | Object storage and cache | Distribute large forecast artifacts efficiently | Planned |
-| Frontend CI and browser automation | Validate build and interaction behavior continuously | Planned |
+| Frontend CI and browser automation | Validate build and interaction behavior continuously | Unit/integration CI implemented; full browser automation remains future work |
 | Authentication and access controls | Support private multi-user research workspaces | Not implemented |
 | Observability and deployment automation | Track reliability, failures and releases | Not implemented |
 
@@ -692,7 +693,7 @@ Raw source data, environment secrets and training workloads should stay outside 
 | Final evaluation reports protocol drift | Frozen inputs/environment no longer match | Restore the recorded environment or prepare a documented amendment |
 | Tests fail creating temporary directories | OS or sandbox permissions | Use a writable local terminal/temp directory and rerun |
 | Hosted route refresh returns 404 | Missing SPA route fallback | Configure the host to serve `index.html` for app routes |
-| Dashboard values differ from a new report | Curated web data was not updated | Reconcile `website/src/data/research.js` with verified artifacts |
+| Dashboard values differ from a new report | Generated web data was not refreshed | Run `python scripts/export_dashboard_data.py`, review the JSON diff and rebuild the dashboard |
 
 ## Development workflow
 
@@ -721,10 +722,10 @@ Python changes can invalidate the prospective code fingerprint. A necessary rese
 - Bootstrap intervals condition on saved predictions and do not capture every source of model-selection uncertainty.
 - Shock and subgroup analyses are descriptive, selected after inspecting development evidence.
 - The project does not evaluate transaction costs, trading profitability, allocation utility or causal regime effects.
-- The dashboard is a static research presentation, without live forecasts or automated report synchronization.
+- The dashboard is a static research presentation. Compact verified artifacts are synchronized by an explicit export command, but forecasts are not live.
 - Prospective market validation and production-scale performance remain unverified.
 
-The next research milestone is the registered prospective comparison. The next product milestone is a versioned artifact export and broader frontend/browser validation.
+The next research milestone is the registered prospective comparison. The next product milestone is a read-only forecast API and broader frontend/browser validation.
 
 ## Data attribution and licensing
 

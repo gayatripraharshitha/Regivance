@@ -41,3 +41,14 @@ test("results combine filters, recover from no matches and inspect a model", asy
   expect(screen.getByText("Stress transparency")).toBeInTheDocument();
   expect(screen.getByText(/88.7% of 2020 shock origins/)).toBeInTheDocument();
 });
+
+test("risk analysis exposes verified stress, VaR and robustness evidence", async () => {
+  render(<MemoryRouter initialEntries={["/risk"]}><App /></MemoryRouter>);
+  expect(await screen.findByRole("heading", { name: /Where forecasts break/i })).toBeInTheDocument();
+  expect(screen.getByText("88.7%", { exact: true })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /Does predicted risk/i })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "99% VaR" }));
+  expect(screen.getAllByText("Calibration mismatch")).toHaveLength(2);
+  expect(screen.getByText(/Prefer GJR-GARCH-t today/i)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /Download seed data/i })).toHaveAttribute("href", expect.stringContaining("v2_lstm_seed_sensitivity.csv"));
+});

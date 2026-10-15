@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BarChart3, Code2, Database, FlaskConical, Info, Menu, Moon, Sun, X } from "lucide-react";
+import { BarChart3, Code2, Database, FlaskConical, Info, Menu, Moon, ShieldAlert, Sun, X } from "lucide-react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTheme } from "../ui/ThemeProvider";
@@ -8,6 +8,7 @@ const links = [
   ["/", "Overview", BarChart3],
   ["/data", "Data & features", Database],
   ["/results", "Results", FlaskConical],
+  ["/risk", "Risk analysis", ShieldAlert],
   ["/methodology", "Methodology", Info],
   ["/about", "About", Code2],
 ];
