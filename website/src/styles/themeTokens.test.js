@@ -14,3 +14,10 @@ test("light and dark themes share the same typography", () => {
   expect(baseStyles).not.toContain("Cormorant Garamond");
   expect(themeStyles).not.toMatch(/:root:not\(\[data-theme="light"\]\)\s+(h1|h2|\.eyebrow)/);
 });
+
+test("light navigation has distinct drawer and active-item contrast", () => {
+  const styles = readFileSync("src/styles/interactions.css", "utf8");
+  expect(styles).toContain(':root[data-theme="light"] .side-nav {');
+  expect(styles).toContain(':root[data-theme="light"] .side-nav nav a.active {');
+  expect(styles).toContain(':root[data-theme="light"] .side-nav nav a.active .nav-icon {');
+});
