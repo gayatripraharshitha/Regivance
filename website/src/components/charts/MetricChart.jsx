@@ -11,7 +11,7 @@ export function MetricChart({ data, metric }) {
           <XAxis type="number" stroke="var(--muted)" tickLine={false} axisLine={false} tickFormatter={(v) => v.toFixed(metric === "qlike" ? 1 : 3)} />
           <YAxis dataKey="model" type="category" width={145} stroke="var(--muted)" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} />
           <Tooltip cursor={{ fill: "var(--line)" }} contentStyle={{ color: "var(--ink)", background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 12 }} formatter={(value) => Number(value).toFixed(6)} />
-          <Bar dataKey={metric} fill="var(--green)" radius={[0, 7, 7, 0]} isAnimationActive={!reducedMotion} animationDuration={700} />
+          <Bar dataKey={metric} fill="var(--cyan)" radius={[0, 7, 7, 0]} isAnimationActive={!reducedMotion} animationDuration={700} />
         </BarChart>
       </ResponsiveContainer>
     </div>
