@@ -1,12 +1,5 @@
-import CountUp from "react-countup";
-import { useInView, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 
 export function AnimatedMetric({ value }) {
-  const ref = useRef(null);
-  const visible = useInView(ref, { once:true, margin:"-40px" });
-  const reduced = useReducedMotion();
-  const numeric = Number(String(value).replaceAll(",", ""));
-  if (!Number.isFinite(numeric)) return <strong ref={ref}>{value}</strong>;
-  return <strong ref={ref} aria-label={String(value)}>{visible ? <CountUp aria-hidden="true" end={numeric} duration={reduced ? 0 : 1.25} separator="," preserveValue /> : "0"}</strong>;
+  return <motion.strong aria-label={String(value)} initial={{ opacity:0, scale:.88 }} whileInView={{ opacity:1, scale:1 }} viewport={{ once:true, amount:.8 }} transition={{ type:"spring", stiffness:170, damping:18 }}>{value}</motion.strong>;
 }

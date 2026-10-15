@@ -64,6 +64,12 @@ body { transition: background-color .3s, color .3s; }
 .button.primary { position:relative; overflow:hidden; }
 .button.primary::after { content:""; position:absolute; inset:-80% auto -80% -45%; width:35%; transform:rotate(18deg); background:rgba(255,255,255,.3); transition:left .55s ease; }
 .button.primary:hover::after { left:120%; }
+.route-error { min-height:100vh; display:grid; place-content:center; justify-items:start; max-width:680px; margin:auto; padding:30px; }
+.route-error>span { color:var(--green); font:11px "DM Mono",monospace; letter-spacing:.18em; }
+.route-error h1 { margin-bottom:8px; }
+.route-error p { color:var(--muted); line-height:1.7; }
+.route-error div { display:flex; gap:10px; }
+.route-error button,.route-error a { padding:12px 16px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--ink); cursor:pointer; }
 @media(hover:hover) {
   .button:hover,.theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 8px 20px #12365a15; }
   .feature-grid article:hover,.about-grid article:hover { transform: translateY(-6px); border-color: var(--green); box-shadow: 0 16px 30px #12365a12; }
