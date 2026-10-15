@@ -73,9 +73,9 @@ The intended input is the Kenneth R. French Data Library's daily 30 Industry Por
 
 ## Status
 
-Current overall progress is approximately **50%**, a planning estimate against the complete research goal. The data pipeline, statistical benchmarks, walk-forward evaluation, regime features, K-means detector and fold-by-fold regime analysis are implemented. Regime-aware forecast models, LSTMs and final research validation remain.
+Current overall progress is approximately **75%**, a planning estimate against the complete research goal. The data pipeline, statistical benchmarks, walk-forward evaluation, regime analysis, regime-switching experiment, LSTM variants, diagnostics and dependence-robust comparisons are implemented. An untouched final evaluation and final report synthesis remain.
 
-Workspace verification on 2026-10-15: **49 tests passed**. Commit `cb7798c` is present on both `sid` and `main`.
+Workspace verification on 2026-10-15: **95 tests passed** with one dependency deprecation warning.
 
 New workflow:
 
@@ -89,7 +89,7 @@ python scripts/analyze_regime_performance.py
 
 `scripts/analyze_regime_performance.py` requires existing statistical predictions and verifies their dates and actual targets against the current dataset. It writes `regime_forecasts.csv`, `regime_centers_by_fold.csv`, and `regime_model_metrics.csv` under `reports/tables/`. Metrics describe existing models conditional on the assigned regime; they do not demonstrate that regime inputs improve forecasts. The prediction CSV must be generated locally before running this analysis.
 
-Next: generate and inspect these descriptive results, then design and validate a regime-aware forecast, followed by LSTM experiments and final research validation.
+The current results remain exploratory because the evaluation period informed model development. Next: freeze the selected specifications, establish an untouched final evaluation period, and complete the research report.
 
 | Component | Status | Files |
 | --- | --- | --- |
@@ -103,9 +103,11 @@ Next: generate and inspect these descriptive results, then design and validate a
 | Exploratory HAC loss comparisons | Implemented | `scripts/analyze_statistical_model_significance.py` |
 | Market-regime features and clustering | Implemented | `src/features/rolling_features.py`, `src/features/regimes.py` |
 | Fold-by-fold regime analysis | Implemented | `src/evaluation/regime_analysis.py`, `scripts/analyze_regime_performance.py` |
-| Regime-aware forecasting model | Next | Planned |
-| LSTM and regime-aware LSTM | Pending | Planned under `src/models/` |
-| Final holdout, robustness, plots and report | Pending | `reports/` and `docs/` |
+| Regime-switching forecasting experiment | Implemented | `scripts/evaluate_regime_switching_model.py` |
+| LSTM and regime-aware LSTM experiments | Implemented | `src/models/lstm.py`, `src/models/lstm_data.py`, comparison scripts |
+| Research diagnostics and failure attribution | Implemented | `scripts/generate_research_diagnostics.py`, `scripts/analyze_forecast_failures.py` |
+| Dependence-robust comparisons | Implemented | `scripts/analyze_dependence_robust_comparison.py` |
+| Untouched final holdout and final report | Pending | `reports/` and `docs/` |
 
 Earlier planning documents may still describe the original scaffold; this README records the current implementation and sequence.
 
@@ -161,9 +163,9 @@ The evaluation period has already informed model comparisons. Despite the parame
 
 ## Remaining sequence
 
-1. **Generate and inspect regime-conditioned results.** Rebuild the statistical prediction CSV, run `scripts/analyze_regime_performance.py`, and inspect model errors and cluster centers across lower-, middle- and higher-volatility conditions.
-2. **Build a regime-aware forecasting model.** Define how regime information changes or combines forecasts, tune it using permitted validation observations only, and compare it with Student-t GJR-GARCH on identical dates.
-3. **Build the LSTM and regime-aware LSTM.** Construct historical sequences, tune on validation data, and compare equivalent networks with and without regime inputs. Fit learned preprocessing only on training data and preserve consistent forecast horizons and evaluation dates.
-4. **Complete final research validation and presentation.** Establish an untouched final test period, investigate robustness across market conditions, assess uncertainty, produce plots and tables, and write the technical report. Consolidate configuration, record dependency versions and experiment provenance, and document limitations.
+1. **Freeze the research specification.** Select the statistical and LSTM variants using the completed development evidence, record every fixed parameter, and stop tuning on the current evaluation period.
+2. **Create an untouched final evaluation.** Choose a later period that has not informed model development, rerun all selected models on identical dates, and preserve all preprocessing and clustering boundaries.
+3. **Complete robustness analysis.** Confirm conclusions across regimes, dependence assumptions and major shock periods without changing the frozen models.
+4. **Finish the research presentation.** Consolidate configuration, record dependency versions and experiment provenance, assemble the final plots and tables, and write the methodology, results, limitations and conclusion sections.
 
 Success means answering: **Does market-regime information improve five-day portfolio-volatility forecasts beyond strong statistical alternatives on unseen future data?** Improvement, limited improvement and no improvement are all valid outcomes when supported by rigorous evaluation.
