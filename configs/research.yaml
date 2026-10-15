@@ -1,0 +1,29 @@
+schema_version: 1
+data:
+  raw_path: data/raw/30_Industry_Portfolios_Daily.csv
+evaluation:
+  train_size: 1260
+  validation_size: 252
+  test_size: 21
+  step_size: 21
+  development_size: 2520
+  embargo: 5
+  horizon: 5
+features:
+  window: 21
+  n_regimes: 3
+  seed: 42
+models:
+  rolling_window: 21
+  ewma_decay: 0.94
+  lookback: 21
+  epochs: 12
+  hidden_size: 12
+  batch_size: 128
+  min_regime_validation: 20
+final_evaluation:
+  freeze_date: '2026-10-15'
+  exposed_data_through: '2026-08-31'
+  observations: 252
+  primary_metric: qlike
+  reference: GJR-GARCH-Student-t

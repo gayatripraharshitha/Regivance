@@ -7,9 +7,10 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.data.loader import load_industry_returns
 from src.data.portfolio import build_forecasting_dataset
+from src.research_config import CONFIG
 
 
-RAW_PATH = PROJECT_ROOT / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
+RAW_PATH = PROJECT_ROOT / CONFIG["data"]["raw_path"]
 OUTPUT_PATH = (
     PROJECT_ROOT
     / "data"

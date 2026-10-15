@@ -19,11 +19,10 @@ if str(PROJECT_ROOT) not in sys.path:
 from src.data.loader import load_industry_returns
 from src.evaluation.metrics import calculate_volatility_metrics
 from src.features.rolling_features import build_regime_features
+from src.research_config import CONFIG
 
 
-RAW_DATA_PATH = (
-    PROJECT_ROOT / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
-)
+RAW_DATA_PATH = PROJECT_ROOT / CONFIG["data"]["raw_path"]
 DATASET_PATH = (
     PROJECT_ROOT / "data" / "processed" / "portfolio_forecasting_dataset.csv"
 )

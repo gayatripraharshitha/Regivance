@@ -14,8 +14,8 @@ The evaluation period has already informed model development. These are explorat
 
 | Model | Mean QLIKE |
 |---|---:|
-| GJR-GARCH-Student-t | 0.41919135 |
-| Risk-feature + regime LSTM | 0.69707371 |
+| GJR-GARCH-Student-t | 0.41919133 |
+| Risk-feature + regime LSTM | 0.69707372 |
 
 ## Loss concentration
 
@@ -28,10 +28,10 @@ The evaluation period has already informed model development. These are explorat
 
 Fold 43 spans February 18 to March 17, 2020. It contains 21 forecast origins.
 
-- Mean daily QLIKE for the focus model: 17.263926
+- Mean daily QLIKE for the focus model: 17.263927
 - Median daily QLIKE for the focus model: 16.330819
 - Maximum daily QLIKE for the focus model: 41.509931
-- The ten largest daily QLIKE contributions total 281.396389 out of 362.542456, accounting for 77.62% of Fold 43's total QLIKE.
+- The top-ten loss share is calculated from the 10 largest daily QLIKE contributions divided by the fold's total QLIKE.
 
 ## Interpretation limitations
 

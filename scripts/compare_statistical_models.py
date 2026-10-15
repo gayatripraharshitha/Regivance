@@ -19,6 +19,7 @@ from src.evaluation.splits import generate_walk_forward_splits
 from src.models.ewma import forecast_ewma_volatility
 from src.models.garch import forecast_garch_volatility_for_fold
 from src.models.rolling_volatility import forecast_rolling_volatility
+from src.research_config import CONFIG
 
 
 DATA_PATH = (
@@ -30,13 +31,13 @@ DATA_PATH = (
 
 OUTPUT_DIR = PROJECT_ROOT / "data" / "processed"
 
-TRAIN_SIZE = 1260
-VALIDATION_SIZE = 252
-TEST_SIZE = 21
-STEP_SIZE = 21
-FINAL_TEST_SIZE = 2520
-EMBARGO = 5
-HORIZON = 5
+TRAIN_SIZE = CONFIG["evaluation"]["train_size"]
+VALIDATION_SIZE = CONFIG["evaluation"]["validation_size"]
+TEST_SIZE = CONFIG["evaluation"]["test_size"]
+STEP_SIZE = CONFIG["evaluation"]["step_size"]
+FINAL_TEST_SIZE = CONFIG["evaluation"]["development_size"]
+EMBARGO = CONFIG["evaluation"]["embargo"]
+HORIZON = CONFIG["evaluation"]["horizon"]
 
 # Each tuple contains: model name, innovation distribution, asymmetric flag.
 GARCH_VARIANTS = [

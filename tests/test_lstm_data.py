@@ -91,7 +91,7 @@ def test_feature_and_target_dates_must_match():
     features, targets = sample_data()
 
     altered_targets = targets.copy()
-    altered_targets.index = altered_targets.index + pd.Timedelta(days=1)
+    altered_targets.index = altered_targets.index.shift(1, freq="D")
 
     with pytest.raises(ValueError, match="identical dates"):
         create_lstm_sequences(

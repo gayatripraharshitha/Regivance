@@ -34,11 +34,10 @@ from src.features.regimes import MarketRegimeDetector
 from src.features.rolling_features import build_regime_features
 from src.models.lstm import LSTMConfig, LSTMVolatilityForecaster
 from src.models.lstm_data import create_lstm_sequences
+from src.research_config import CONFIG
 
 
-RAW_DATA_PATH = (
-    PROJECT_ROOT / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
-)
+RAW_DATA_PATH = PROJECT_ROOT / CONFIG["data"]["raw_path"]
 
 BASELINE_PATH = (
     PROJECT_ROOT
@@ -49,7 +48,7 @@ BASELINE_PATH = (
 
 OUTPUT_DIR = PROJECT_ROOT / "reports" / "tables"
 
-LOOKBACK = 21
+LOOKBACK = CONFIG["models"]["lookback"]
 REGIME_NAMES = ("lower", "middle", "higher")
 
 STATISTICAL_MODELS = [
@@ -83,21 +82,21 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--epochs",
         type=int,
-        default=12,
+        default=CONFIG["models"]["epochs"],
         help="Maximum epochs per LSTM fit. Validation loss controls stopping.",
     )
 
     parser.add_argument(
         "--hidden-size",
         type=int,
-        default=12,
+        default=CONFIG["models"]["hidden_size"],
         help="Number of hidden LSTM units.",
     )
 
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=128,
+        default=CONFIG["models"]["batch_size"],
         help="Mini-batch size.",
     )
 

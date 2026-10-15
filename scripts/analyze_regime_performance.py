@@ -14,6 +14,7 @@ from scripts.compare_statistical_models import (
     EMBARGO, HORIZON,
 )
 from src.data.loader import load_industry_returns
+from src.research_config import CONFIG
 from src.data.portfolio import build_forecasting_dataset
 from src.features.rolling_features import build_regime_features
 from src.evaluation.splits import generate_walk_forward_splits
@@ -30,7 +31,7 @@ def main():
         )
     predictions = pd.read_csv(path, index_col=0, parse_dates=True)
     returns = load_industry_returns(
-        PROJECT_ROOT / "data/raw/30_Industry_Portfolios_Daily.csv"
+        PROJECT_ROOT / CONFIG["data"]["raw_path"]
     )
     dataset = build_forecasting_dataset(returns, horizon=HORIZON)
     # Compute trailing features on full history, then align without shifting folds.

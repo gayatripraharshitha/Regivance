@@ -1,0 +1,79 @@
+{
+  "registered_utc": "2026-10-15T13:30:05.899482+00:00",
+  "config": {
+    "schema_version": 1,
+    "data": {
+      "raw_path": "data/raw/30_Industry_Portfolios_Daily.csv"
+    },
+    "evaluation": {
+      "train_size": 1260,
+      "validation_size": 252,
+      "test_size": 21,
+      "step_size": 21,
+      "development_size": 2520,
+      "embargo": 5,
+      "horizon": 5
+    },
+    "features": {
+      "window": 21,
+      "n_regimes": 3,
+      "seed": 42
+    },
+    "models": {
+      "rolling_window": 21,
+      "ewma_decay": 0.94,
+      "lookback": 21,
+      "epochs": 12,
+      "hidden_size": 12,
+      "batch_size": 128,
+      "min_regime_validation": 20
+    },
+    "final_evaluation": {
+      "freeze_date": "2026-10-15",
+      "exposed_data_through": "2026-08-31",
+      "observations": 252,
+      "primary_metric": "qlike",
+      "reference": "GJR-GARCH-Student-t"
+    }
+  },
+  "environment": {
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "packages": "arch==8.0.0\ncloudpickle==3.1.2\ncolorama==0.4.6\ncontourpy==1.4.0\ncycler==0.12.1\nfilelock==4.1.0\nfonttools==4.66.1\nformulaic==1.2.2\nfsspec==2026.9.0\niniconfig==2.3.1\ninterface_meta==2.0.1\nJinja2==3.1.6\njoblib==1.6.0\nkiwisolver==1.5.1\nMarkupSafe==3.0.4\nmatplotlib==3.11.2\nmpmath==1.3.0\nnarwhals==2.27.1\nnetworkx==3.7\nnumpy==2.5.3\npackaging==26.3\npandas==2.3.3\npatsy==1.0.3\npillow==12.3.0\npluggy==1.6.0\npyarrow==24.0.0\nPygments==2.21.0\npyparsing==3.3.3\npytest==8.4.2\npython-dateutil==2.9.0.post0\npytz==2026.5\nPyYAML==6.0.3\nscikit-learn==1.9.1\nscipy==1.18.1\nsetuptools==84.0.0\nsix==1.17.0\nstatsmodels==0.15.0\nsympy==1.14.0\nthreadpoolctl==3.7.0\ntorch==2.14.1\ntyping_extensions==4.16.0\ntzdata==2026.5\nwrapt==2.5.0\n"
+  },
+  "code_sha256": {
+    "src/research_config.py": "e8d5a547355ba50a2c286e2805c65753f3f2405a41b4f11ce5ce83d9f27a3f2c",
+    "src/data/loader.py": "fe1778363e64526029cde53487d60cd9583543e3984b934fd4b5f9fc77175d00",
+    "src/data/portfolio.py": "566d21f6522683c4daa7a930cd26ecd3f15491f677a1e18a7c9c1276104890fa",
+    "src/evaluation/final_protocol.py": "ce0e9ab26470006a2998f228e787fc886a99f9cdbdb5910647e84a69c7158418",
+    "src/evaluation/metrics.py": "02d4179762610b54f985cc1b4dcd1d1bdb24c705a9e9c5563191e24a03f663c5",
+    "src/evaluation/regime_analysis.py": "b338160b33633d1f5dc62765720f9239da8376c6ada59ab3e25963d67d6b390d",
+    "src/evaluation/splits.py": "bac69a587587a16b30836ee6add2a8fbb4ff7db9804f6228be7cb4e181b4f535",
+    "src/features/regimes.py": "e5c1f961f350ffabf3f0045ced70f8ae2e267b1389e26fb53a89dc39a7afe260",
+    "src/features/rolling_features.py": "dae5c1e9501124251bdac3caee77baebb5e4be35b98a054e72b62affb6f8391f",
+    "src/models/ewma.py": "8242a73d3446794815dc68a7be3ab53bbf817b7f5398556337970d3419ee9c7a",
+    "src/models/garch.py": "af821cf72bbb704b14344a834a2936edb6d3f1d67cac2408c627e578fedce1cd",
+    "src/models/lstm.py": "da745805410a9bf3bcb190d03cb7ae8a837d2d7ff5cb274b924724b215856bc3",
+    "src/models/lstm_data.py": "7091dd03de9e092396419ebc5a4e1d8569e2a8fc8eb084986eafea0bbe2a610c",
+    "src/models/rolling_volatility.py": "46e05dd831c953c9092274ce18effdfcea4cde45aaefc5d7fec5204c7cf9ac8b",
+    "scripts/analyze_dependence_robust_comparison.py": "7844436f1a3b62d7b78da8678faa33a770ec1907f1363cfff7e48f044e36fbfa",
+    "scripts/analyze_forecast_failures.py": "a584e409e761ed1bb157c9549052ffcc59ebffe4d50caf24d25d88a8c1357502",
+    "scripts/analyze_regime_performance.py": "cd0a49f48b19b3f05e0ad530ab246abfcc4bec0a97fa2c5eec68965675d2bc1d",
+    "scripts/analyze_statistical_model_significance.py": "e7071e882fc591afa4a4e3dcc184b1beee74c650111322c01d67799a0a7703d7",
+    "scripts/build_dataset.py": "459967eb327e937626e131e8f719e55bf8f053f59942e5721aaabff2ae1924df",
+    "scripts/build_research_report.py": "de86a9c1734b314bb0f2bb306ba2a8d602ef4cfc91d8518b154046a96fbee57b",
+    "scripts/compare_baselines.py": "240c0ed163ce691951b246a877646032bf05a70cd783fbc422c91bbcf5db244f",
+    "scripts/compare_lstm_models.py": "23ab0a376899349de08aac79f4d5294d1f26abb4db6e2c5d0397cf7950ce72b0",
+    "scripts/compare_lstm_qlike_objective.py": "077521ddb4c3e95597c6bdbc3beda8ab7cd28477b247845992539ce634d51933",
+    "scripts/compare_lstm_risk_features.py": "d48ff51ddd435b9ceee4768278e4474a407a7ed472a0b53108112d66ba864803",
+    "scripts/compare_statistical_models.py": "2139c835e12d92752ad9d1a6a229ba1c5cfd222d8d6cde6742ae9a3a5a7c5eee",
+    "scripts/evaluate_regime_switching_model.py": "b48831124dbe85ab628faaad2a236139840f5bb7973e067f9b038365e35d34ea",
+    "scripts/evaluate_rolling_baseline.py": "6504bf0f6f744c442824718db75e7fc10ff2e28468e5aefc6d2416bdce7b4894",
+    "scripts/final_evaluation.py": "6279e32ea48908ec1114dbe9e04462e5dd13bdf0e032e6e52c27a5ce9c30dcdc",
+    "scripts/generate_research_diagnostics.py": "3cd66e1aacb8532817af7530937918482520d4ee13b4d77128d0786f6e23ce58",
+    "scripts/run_research.py": "218f10675a0be3f8dda1506796b6079c46dfa53a73959558423ce8f38c87262b",
+    "scripts/run_rolling_baseline.py": "d630d45c2fc2a34186d16d38e07975d5a28e7845dbab7aebf28e9f48d5e6633c",
+    "scripts/validate_data.py": "0ddf3441e02486e6be98eec65944b879fe3e76ff76ce59ea5a68c0d6eb7c8510"
+  },
+  "source_sha256": "dd2ca61d3cfe66c279e347a91535e12520907ceb98808ca42fff05c0657dc924",
+  "historical_returns_sha256": "88f00ba9da171001abc423ef6ffaf3a53b644ecb2c8dafeec675e470c1152761"
+}

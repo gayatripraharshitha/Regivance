@@ -38,9 +38,9 @@ Invalid or unexpected missing values cause an explicit error instead of being si
 
 | Metric | Best model in this evaluation | Score |
 |---|---|---:|
-| MAE | GJR-GARCH-Student-t | 0.00746767 |
+| MAE | GJR-GARCH-Student-t | 0.00746768 |
 | RMSE | GJR-GARCH-Student-t | 0.01112928 |
-| QLIKE | GJR-GARCH-Student-t | 0.41919135 |
+| QLIKE | GJR-GARCH-Student-t | 0.41919133 |
 
 These metrics summarise this evaluation only. They do not establish statistical significance or performance on a future untouched holdout.
 

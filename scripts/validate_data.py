@@ -9,9 +9,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.data.loader import load_industry_returns
+from src.research_config import CONFIG
 
 
-DATA_PATH = PROJECT_ROOT / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
+DATA_PATH = PROJECT_ROOT / CONFIG["data"]["raw_path"]
 
 
 def main():

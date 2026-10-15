@@ -33,11 +33,10 @@ from src.features.rolling_features import build_regime_features
 from src.models.ewma import forecast_ewma_volatility
 from src.models.garch import forecast_garch_volatility_for_fold
 from src.models.rolling_volatility import forecast_rolling_volatility
+from src.research_config import CONFIG
 
 
-RAW_DATA_PATH = (
-    PROJECT_ROOT / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
-)
+RAW_DATA_PATH = PROJECT_ROOT / CONFIG["data"]["raw_path"]
 
 BASELINE_PREDICTIONS_PATH = (
     PROJECT_ROOT
@@ -53,7 +52,7 @@ REGIMES = ("lower", "middle", "higher")
 
 # A regime with fewer validation observations uses the global
 # validation winner instead of a fragile regime-specific selection.
-MIN_VALIDATION_OBS_PER_REGIME = 20
+MIN_VALIDATION_OBS_PER_REGIME = CONFIG["models"]["min_regime_validation"]
 
 MODEL_NAMES = [
     "Rolling",

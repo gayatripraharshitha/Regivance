@@ -15,18 +15,18 @@ Per-origin absolute error, squared error, and variance-based QLIKE are paired by
 
 | Candidate | Comparator | Loss | Mean difference | 95% HAC CI | Unadjusted p | Holm p |
 |---|---|---|---:|---:|---:|---:|
-| Risk-feature + regime LSTM | Risk-feature LSTM | MAE | 0.00015227404 | [-3.3708729e-06, 0.00030791896] | 0.05517 | 0.331 |
-| Risk-feature + regime LSTM | Risk-feature LSTM | Squared error | 1.4184397e-05 | [3.9557988e-06, 2.4412995e-05] | 0.006588 | 0.05929 |
-| Risk-feature + regime LSTM | Risk-feature LSTM | QLIKE | 0.1062482 | [0.014038357, 0.19845804] | 0.02394 | 0.1915 |
-| Regime-aware LSTM | LSTM | MAE | 0.00025733663 | [0.00010293999, 0.00041173327] | 0.001097 | 0.01316 |
-| Regime-aware LSTM | LSTM | Squared error | -9.4511556e-07 | [-7.9755174e-06, 6.0852863e-06] | 0.7921 | 1 |
-| Regime-aware LSTM | LSTM | QLIKE | -0.018867461 | [-0.089381084, 0.051646163] | 0.5998 | 1 |
-| Risk-feature + regime LSTM | GJR-GARCH-Student-t | MAE | -3.1770292e-05 | [-0.00063731965, 0.00057377907] | 0.9181 | 1 |
-| Risk-feature + regime LSTM | GJR-GARCH-Student-t | Squared error | -7.762647e-05 | [-0.00015732697, 2.0740322e-06] | 0.05626 | 0.331 |
-| Risk-feature + regime LSTM | GJR-GARCH-Student-t | QLIKE | -0.27788236 | [-0.44751268, -0.10825203] | 0.001333 | 0.01467 |
-| Risk-feature LSTM | GJR-GARCH-Student-t | MAE | -0.00018404433 | [-0.00083513107, 0.0004670424] | 0.5794 | 1 |
-| Risk-feature LSTM | GJR-GARCH-Student-t | Squared error | -9.1810867e-05 | [-0.00017990141, -3.7203204e-06] | 0.04108 | 0.2876 |
-| Risk-feature LSTM | GJR-GARCH-Student-t | QLIKE | -0.38413056 | [-0.62975111, -0.13851] | 0.002187 | 0.02187 |
+| Risk-feature + regime LSTM | Risk-feature LSTM | MAE | 0.00015227403 | [-3.3708784e-06, 0.00030791894] | 0.05517 | 0.331 |
+| Risk-feature + regime LSTM | Risk-feature LSTM | Squared error | 1.4184395e-05 | [3.9557975e-06, 2.4412992e-05] | 0.006588 | 0.05929 |
+| Risk-feature + regime LSTM | Risk-feature LSTM | QLIKE | 0.10624817 | [0.014038344, 0.198458] | 0.02394 | 0.1915 |
+| Regime-aware LSTM | LSTM | MAE | 0.00025733661 | [0.00010293997, 0.00041173325] | 0.001097 | 0.01316 |
+| Regime-aware LSTM | LSTM | Squared error | -9.4511623e-07 | [-7.9755184e-06, 6.0852859e-06] | 0.7921 | 1 |
+| Regime-aware LSTM | LSTM | QLIKE | -0.01886747 | [-0.089381096, 0.051646156] | 0.5998 | 1 |
+| Risk-feature + regime LSTM | GJR-GARCH-Student-t | MAE | -3.1767085e-05 | [-0.0006373168, 0.00057378263] | 0.9181 | 1 |
+| Risk-feature + regime LSTM | GJR-GARCH-Student-t | Squared error | -7.762638e-05 | [-0.00015732689, 2.0741273e-06] | 0.05626 | 0.331 |
+| Risk-feature + regime LSTM | GJR-GARCH-Student-t | QLIKE | -0.27788239 | [-0.44751276, -0.10825202] | 0.001333 | 0.01467 |
+| Risk-feature LSTM | GJR-GARCH-Student-t | MAE | -0.00018404111 | [-0.00083512813, 0.0004670459] | 0.5794 | 1 |
+| Risk-feature LSTM | GJR-GARCH-Student-t | Squared error | -9.1810774e-05 | [-0.00017990132, -3.7202252e-06] | 0.04109 | 0.2876 |
+| Risk-feature LSTM | GJR-GARCH-Student-t | QLIKE | -0.38413056 | [-0.62975113, -0.13850999] | 0.002187 | 0.02187 |
 
 ## HAC lag sensitivity
 

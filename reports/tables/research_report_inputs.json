@@ -1,0 +1,6 @@
+{
+  "data\\raw\\30_Industry_Portfolios_Daily.csv": "dd2ca61d3cfe66c279e347a91535e12520907ceb98808ca42fff05c0657dc924",
+  "reports\\tables\\lstm_risk_feature_comparison_predictions.csv": "5c201a3e467b7f781f371562c42dd99f07cdf3687c5c23bd0f08aaf65b3ae255",
+  "reports\\tables\\regime_switching_predictions.csv": "8dd053dac6320042a4b7f932b41a77445964d6b844e56aed7dfc7776e6346949",
+  "reports\\tables\\lstm_qlike_objective_predictions.csv": "45a88a277b0ff65e5fa810df8534a6921e18feb303df58b2d743cdc2abcd79d0"
+}

@@ -25,6 +25,7 @@ from scripts.compare_lstm_models import (
 )
 from src.evaluation.metrics import calculate_volatility_metrics
 from src.features.rolling_features import build_regime_features
+from src.research_config import CONFIG
 
 
 MODEL_NAMES = [
@@ -54,21 +55,21 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--epochs",
         type=int,
-        default=12,
+        default=CONFIG["models"]["epochs"],
         help="Maximum training epochs per LSTM.",
     )
 
     parser.add_argument(
         "--hidden-size",
         type=int,
-        default=12,
+        default=CONFIG["models"]["hidden_size"],
         help="Number of hidden LSTM units.",
     )
 
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=128,
+        default=CONFIG["models"]["batch_size"],
         help="Mini-batch size.",
     )
 

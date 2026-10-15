@@ -25,6 +25,7 @@ from src.evaluation.metrics import calculate_volatility_metrics
 from src.features.rolling_features import build_regime_features
 from src.models.lstm import LSTMVolatilityForecaster
 from src.models.lstm_data import create_lstm_sequences
+from src.research_config import CONFIG
 
 EXISTING_PREDICTIONS_PATH = (
     PROJECT_ROOT
@@ -49,9 +50,9 @@ def parse_arguments() -> argparse.Namespace:
         required=True,
         help="Explicit number of chronological folds to run.",
     )
-    parser.add_argument("--epochs", type=int, default=12)
-    parser.add_argument("--hidden-size", type=int, default=12)
-    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--epochs", type=int, default=CONFIG["models"]["epochs"])
+    parser.add_argument("--hidden-size", type=int, default=CONFIG["models"]["hidden_size"])
+    parser.add_argument("--batch-size", type=int, default=CONFIG["models"]["batch_size"])
     return parser.parse_args()
 
 
@@ -256,7 +257,10 @@ def main() -> None:
     pd.DataFrame(records).to_csv(outputs["metrics"], index=False)
     pd.DataFrame(fold_records).to_csv(outputs["fold_metrics"], index=False)
     pd.DataFrame(training_records).to_csv(outputs["training"], index=False)
-    print("\nSMOKE TEST ONLY: these results are an implementation check, not evidence.")
+    if len(splits) < len(all_splits):
+        print("\nSMOKE TEST ONLY: these results cover a subset of folds.")
+    else:
+        print("\nFull development comparison; exploratory, not an untouched final test.")
     print(pd.DataFrame(records).to_string(index=False, float_format=lambda x: f"{x:.8f}"))
 
 

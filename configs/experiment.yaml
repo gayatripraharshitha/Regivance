@@ -1,3 +1,4 @@
+# Legacy scaffold only; not executed. Use research.yaml for the working protocol.
 experiment:
   name: regime_aware_volatility_v1
   seed: 42

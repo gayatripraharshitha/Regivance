@@ -1,19 +1,22 @@
-# Implementation plan
+# Implementation status — 2026-10-15
 
-## First vertical slice: data to a validated target
+The original scaffold has become a functioning development research system. Approximate overall completion is 95%; this is a planning estimate, not a measured score.
 
-1. Download and archive the 30-industry daily return source with provenance. ✅
-2. Implement `src.data.loader.load_industry_returns` for the source's nonstandard header/footer layout. ✅
-3. Implement validation and an equal-weight portfolio constructor. ✅
-4. Build the five-day forward realized-volatility target and test its date alignment with a tiny synthetic series. ✅
-5. Save a processed dataset and produce one diagnostic plot/table. *(Dataset complete; diagnostics next.)*
+| Phase | Status | Evidence |
+| --- | --- | --- |
+| Data foundation | Complete | Source loader, validation, daily equal-industry portfolio, five-observation target, tests |
+| Statistical evaluation | Complete | Rolling/EWMA/three GARCH variants; 120 chronological folds; 2,520 common dates |
+| Market regimes and neural models | Complete | Train-only K-means; regime selector; four LSTM inputs; full QLIKE-objective experiment |
+| Development validation and presentation | Complete | HAC/bootstrap uncertainty, year/regime/shock/offset checks, plots, research report, provenance |
+| Prospective final evaluation implementation | Complete | Fixed future origins, frozen code/config/history/environment, real synthetic integration test |
+| Prospective real-data evidence | Waiting for future observations | First 252 origins strictly after 2026-10-15 plus five target observations |
 
-This slice is the right next step because every later model depends on correct units, dates, and target alignment. It also lets us establish a naive rolling-volatility benchmark before investing in GARCH, clustering, or PyTorch.
+## Verification
 
-## Subsequent milestones
+121 automated tests pass locally without warnings. Dependency consistency passes. A two-platform GitHub Actions workflow has been added; remote execution is not yet verified.
 
-1. Rolling-volatility and EWMA baselines plus MAE/RMSE/QLIKE.
-2. Walk-forward splitter with horizon embargo and tests.
-3. Training-window-only regime clustering and regime diagnostics.
-4. GARCH(1,1) benchmark.
-5. LSTM baseline, then a regime-aware LSTM with identical splits.
+## Next real-world action
+
+Preserve the archived source and frozen protocol. Once the 257 required post-freeze observations are available, follow the README's prospective command using a separate updated source file. Do not tune models on final-period outcomes. Preserve and report any historical source revisions or necessary protocol amendments.
+
+Development evidence currently favors Student-t GJR-GARCH. Lack of a regime improvement is a valid research outcome, not a reason to change the evaluation after seeing results.

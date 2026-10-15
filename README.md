@@ -1,171 +1,165 @@
 # Regivance
 
-A reproducible research system for forecasting five-trading-day volatility of a fixed-weight US industry portfolio. It compares classical volatility benchmarks, market-regime features, and a small LSTM under chronological, leakage-controlled evaluation.
+A reproducible research project testing whether market-regime information improves five-observation portfolio-volatility forecasts beyond strong statistical models.
 
-## Research question
+## Current status — 2026-10-15
 
-Does market-regime information improve five-day realized-volatility forecasts, and does a small LSTM outperform conventional volatility models out of sample?
+The implementation, full development experiments, robustness analysis and development research report are complete. **121 tests pass** locally; `pip check` reports no broken requirements. GitHub Actions is configured for Windows/Linux Python 3.13, but has not been run remotely as part of this update.
 
-## Windows / PowerShell setup
+The only mandatory research milestone still pending is the **prospective final evaluation**. Existing data has already informed development, so it cannot honestly be called an untouched holdout. The frozen protocol needs 257 new source observations after 2026-10-15: 252 forecast origins plus five observations to complete their targets. Approximate overall research progress: **95%**, not a measured score or a claim of final validation.
 
-Use Python 3.10–3.13 (64-bit). Run each command from the repository root in **PowerShell**. Invoking Python through the virtual environment avoids accidentally installing packages into a different Python installation.
+Read the [development research report](reports/research_report.md), [implementation status](docs/implementation-plan.md), and [change summary](docs/completion-summary.md).
+
+## Interactive React dashboard
+
+The project includes a responsive React/Vite presentation layer under [`website/`](website/README.md). It uses React Router, Framer Motion, Recharts and Lucide for page navigation, motion, research visualizations and interface icons. The browser reads curated development summaries and never retrains models on page load.
 
 ```powershell
-# Create the isolated environment (only needed once)
+cd website
+npm.cmd install
+npm.cmd test
+npm.cmd run build
+npm.cmd run dev
+```
+
+Using `npm.cmd` avoids PowerShell script-policy issues that can block `npm.ps1` on Windows.
+
+## Setup — Windows PowerShell
+
+Run from the repository root. Python 3.13 (64-bit) is the tested version.
+
+```powershell
 py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -B -m pytest tests -v -p no:cacheprovider
+```
 
-# Activate it for the current PowerShell session
+Activation is optional. Using the explicit virtual-environment executable avoids installation into the wrong Python. If you prefer activation:
+
+```powershell
 .\.venv\Scripts\Activate.ps1
-
-# Upgrade pip and install all project dependencies
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-
-# Verify dependencies, build the dataset, and execute tests
-python -c "import arch, numpy, pandas, sklearn, torch; print('Dependencies verified')"
-python scripts/validate_data.py
-python scripts/build_dataset.py
-python -m pytest tests -v -p no:cacheprovider
+python -m pip check
 ```
 
-If `py -3.13` is unavailable, replace it with `python`; use `py --list` to see installed Python versions. If PowerShell blocks activation, run the following **once for the current terminal only**, then activate again:
+If activation is blocked, use the explicit executable above, or enable scripts for this terminal only with `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`. Do not change machine-wide policy.
 
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-```
+For the exact installed Windows/Python 3.13.14 environment used in this reproduction, use `requirements-lock-windows-py313.txt` in place of `requirements.txt`. It is an environment snapshot, not a cross-platform, hash-locked package archive. Other versions/platforms may produce slightly different floating-point results.
 
-You may also skip activation entirely by replacing `python` above with `.\.venv\Scripts\python.exe`.
+Troubleshooting:
 
-### Installation troubleshooting
+- Confirm the interpreter with `python -c "import sys; print(sys.executable)"`.
+- For missing wheels, check 64-bit Python 3.13 and update pip.
+- For temporary-directory permission errors, use a writable temporary directory or run in a normal local terminal. Do not interpret fixture setup failures as model failures.
+- Linux/macOS: use `python3 -m venv .venv` and `.venv/bin/python` instead of the Windows executable.
 
-- `No matching distribution found`: update pip with `python -m pip install --upgrade pip`, then retry. Confirm the command is using the virtual environment: `python -c "import sys; print(sys.executable)"`.
-- `Access is denied` or temp-directory errors: close editors/terminals using the environment, then retry with a local temp directory:
+## Dataset
 
-  ```powershell
-  New-Item -ItemType Directory -Force .pip-tmp | Out-Null
-  $env:TMP = (Resolve-Path .pip-tmp)
-  $env:TEMP = $env:TMP
-  python -m pip install --no-cache-dir -r requirements.txt
-  ```
-
-The dataset builder writes `data/processed/portfolio_forecasting_dataset.csv`. An older `portfolio_returns.parquet` may exist from the scaffold but is not used by the current comparison scripts. There is no current `src/pipeline.py` entry point. Scripts use constants defined inside them; `configs/experiment.yaml` contains planned settings and is not yet connected to this workflow.
-
-## Layout
+Download the [daily 30 Industry Portfolios CSV ZIP](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/30_Industry_Portfolios_Daily_CSV.zip) from the [Kenneth R. French Data Library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html). Extract the CSV to:
 
 ```text
-configs/       Experiment parameters
-data/raw/      Downloaded source data (not committed)
-data/processed/ Cleaned, feature-ready datasets (not committed)
-src/           Research pipeline package
-tests/         Unit and integration tests
-reports/       Generated charts, tables, and write-ups
-scripts/       Repeatable operational commands
-docs/          Data contract and implementation plan
+data/raw/30_Industry_Portfolios_Daily.csv
 ```
 
-## Reproducibility and leakage policy
+The reproduced local vintage spans 1926-07-01 through 2026-08-31 (26,317 observations). See [source provenance](data/raw/README.md) and the [data contract](docs/data-contract.md). Raw data is not committed. A newer download may revise history and will not necessarily reproduce this vintage; archive the original file separately.
 
-All transformations that learn from data (scalers, PCA, clustering, neural-network fitting) must be fit on each training window only. Forecast targets use the following five trading days; train/test splits therefore require an embargo of at least five observations.
+The loader selects the **value-weighted industry table**, converts percentages to decimals, and preserves valid historical Saturday observations. The portfolio then weights the 30 industries equally each day.
 
-## Data source
-
-The intended input is the Kenneth R. French Data Library's daily 30 Industry Portfolios dataset. Record the downloaded file name, retrieval date, source URL, and checksum in `data/raw/README.md` before a run.
-
-## Status
-
-Current overall progress is approximately **75%**, a planning estimate against the complete research goal. The data pipeline, statistical benchmarks, walk-forward evaluation, regime analysis, regime-switching experiment, LSTM variants, diagnostics and dependence-robust comparisons are implemented. An untouched final evaluation and final report synthesis remain.
-
-Workspace verification on 2026-10-15: **95 tests passed** with one dependency deprecation warning.
-
-New workflow:
-
-```powershell
-python scripts/build_dataset.py
-python scripts/compare_statistical_models.py
-python scripts/analyze_regime_performance.py
-```
-
-`src/evaluation/regime_analysis.py` fits a fresh scaler and K-means model on each fold's training features. It ranks clusters by training-center volatility as lower/middle/higher, preserving raw cluster IDs and centers for inspection. These ranks are relative to each training window, not fixed economic states. Features are calculated through the forecast date, consistent with after-close forecasts. Warm-up rows are removed only within training slices, so evaluation dates never shift.
-
-`scripts/analyze_regime_performance.py` requires existing statistical predictions and verifies their dates and actual targets against the current dataset. It writes `regime_forecasts.csv`, `regime_centers_by_fold.csv`, and `regime_model_metrics.csv` under `reports/tables/`. Metrics describe existing models conditional on the assigned regime; they do not demonstrate that regime inputs improve forecasts. The prediction CSV must be generated locally before running this analysis.
-
-The current results remain exploratory because the evaluation period informed model development. Next: freeze the selected specifications, establish an untouched final evaluation period, and complete the research report.
-
-| Component | Status | Files |
-| --- | --- | --- |
-| Dataset parsing | Implemented | `src/data/loader.py` |
-| Data checks, portfolio and forward target | Implemented | `src/data/portfolio.py`, `scripts/validate_data.py` |
-| Rolling volatility and EWMA | Implemented | `src/models/rolling_volatility.py`, `src/models/ewma.py` |
-| Normal GARCH, Student-t GARCH, Student-t GJR-GARCH | Implemented | `src/models/garch.py` |
-| Walk-forward evaluation | Implemented | `src/evaluation/splits.py` |
-| MAE, RMSE, variance-based QLIKE | Implemented | `src/evaluation/metrics.py` |
-| Pooled and fold-level comparisons | Implemented | `scripts/compare_statistical_models.py` |
-| Exploratory HAC loss comparisons | Implemented | `scripts/analyze_statistical_model_significance.py` |
-| Market-regime features and clustering | Implemented | `src/features/rolling_features.py`, `src/features/regimes.py` |
-| Fold-by-fold regime analysis | Implemented | `src/evaluation/regime_analysis.py`, `scripts/analyze_regime_performance.py` |
-| Regime-switching forecasting experiment | Implemented | `scripts/evaluate_regime_switching_model.py` |
-| LSTM and regime-aware LSTM experiments | Implemented | `src/models/lstm.py`, `src/models/lstm_data.py`, comparison scripts |
-| Research diagnostics and failure attribution | Implemented | `scripts/generate_research_diagnostics.py`, `scripts/analyze_forecast_failures.py` |
-| Dependence-robust comparisons | Implemented | `scripts/analyze_dependence_robust_comparison.py` |
-| Untouched final holdout and final report | Pending | `reports/` and `docs/` |
-
-Earlier planning documents may still describe the original scaffold; this README records the current implementation and sequence.
-
-## Target and forecast timing
-
-Industry inputs come from the source's value-weighted table. We then give each industry equal weight each day, implying daily rebalancing across industries. At the close of observation `t`:
+At the close of observation `t`:
 
 ```text
-portfolio_return[t] = mean of the 30 industry returns at t
-target_volatility_5d[t] = sqrt(sum(r[t+j]^2 for j = 1,...,5))
-rolling_forecast[t] = sqrt(5 * mean(r^2 over the latest 21 observations))
+portfolio_return[t] = mean(industry_returns[t])
+target[t] = sqrt(sum(portfolio_return[t+j] ** 2 for j = 1,...,5))
 ```
 
-The target is five-observation realized volatility, not annualized volatility or the root mean square of daily returns. The final five rows have no complete target and are dropped. Preserve valid historical observations, including historical Saturday observations; windows and gaps count source observations, not calendar days.
+This is five-observation realized volatility, not annualized volatility or centered sample standard deviation. The last five observations lack complete targets.
 
-## Statistical comparison workflow
-
-After building the dataset, run:
+## Reproduce the complete development workflow
 
 ```powershell
-python scripts/compare_statistical_models.py
-python scripts/analyze_statistical_model_significance.py
+.\.venv\Scripts\python.exe -B scripts/validate_data.py
+.\.venv\Scripts\python.exe -B scripts/run_research.py
 ```
 
-The comparison fits each GARCH variant per fold and writes these files to `data/processed/`:
+This builds the dataset, evaluates statistical and regime-switching models, trains all four LSTM input variants plus the QLIKE-objective variant, and generates diagnostics, uncertainty estimates, robustness tables, plots and the report. Model training runs on CPU.
 
-- `walk_forward_statistical_models_predictions.csv`
-- `statistical_model_comparison_metrics.csv`
-- `statistical_model_comparison_fold_metrics.csv`
+Configuration: [configs/research.yaml](configs/research.yaml). The old `configs/experiment.yaml` is an unused scaffold. The diagnostic suite intentionally requires 120 blocks of 21 observations; some schema-encoded choices (five-observation horizon, 21-observation risk features, three regimes) are validated rather than freely tunable.
 
-The significance script writes `reports/tables/gjr_garch_hac_significance.csv`. Generated datasets and reports are ignored by Git and must be regenerated locally. Individual-stage scripts also include `run_rolling_baseline.py`, `evaluate_rolling_baseline.py`, and `compare_baselines.py`.
+Run records: `reports/runs/development/manifest.json`, per-stage logs and `environment.txt`. Records include code/config, source-data and artifact checksums. A new full run refreshes generated outputs and archives previous logs/manifest and controlled QLIKE artifacts under `reports/runs/development/archive/`. Raw source data is not changed.
 
-The full comparison specifies 1,260 training observations, 252 validation observations, five-observation gaps at both boundaries, and 21-observation test blocks advancing by 21 observations. A 2,520-observation evaluation period yields **120 folds and 2,520 forecasts per model** on identical dates.
+To resume an interrupted run with unchanged inputs:
 
-GARCH parameters are fitted on each training window. Subsequently observed returns update the variance state while parameters remain fixed within the test block. Validation windows exist, but this comparison currently uses fixed specifications rather than a tuning procedure.
+```powershell
+.\.venv\Scripts\python.exe -B scripts/run_research.py --resume
+```
 
-## Reported results and limitations
+Resume refuses changed code/config/data/environment and checks saved output hashes. Most generated prediction files are ignored by Git. Compact research summary tables and the final comparison plot are retained for review.
 
-The reported best pooled benchmark is **GJR-GARCH with Student-t errors**:
+## Models, features and evaluation
 
-| Metric | Reported value |
-| --- | ---: |
-| MAE | 0.007468 |
-| RMSE | 0.011129 |
-| QLIKE | 0.419191 |
-| Out-of-sample observations | 2,520 |
+The 11 compared forecasts are:
 
-These scores were supplied from a previous experiment. Its prediction and metric CSVs were absent from the inspected workspace on 2026-10-15, so the scores were not independently reproduced during this documentation update. The 49-test suite was rerun successfully.
+- Rolling volatility (21 observations), EWMA (decay 0.94), normal GARCH, Student-t GARCH and Student-t GJR-GARCH.
+- Regime-switching selection among those statistical models, based only on validation QLIKE.
+- LSTM; regime-aware LSTM; risk-feature LSTM; risk-feature-plus-regime LSTM.
+- Risk-feature-plus-regime LSTM trained with QLIKE instead of log-volatility MSE.
 
-The HAC code compares paired losses against normal GARCH and EWMA at lag choices 4 and 20; squared error is the observation-level loss underlying RMSE. These comparisons are exploratory. The reported evidence does not establish superiority across every metric or against every competing model.
+Regime inputs are trailing portfolio RMS volatility, mean pairwise cross-industry correlation, and same-day cross-sectional dispersion. Training-only standardization and K-means discover three clusters, ranked lower/middle/higher by training-center volatility. These ranks are relative to each fold, not permanent economic labels.
 
-The evaluation period has already informed model comparisons. Despite the parameter name `final_test_size`, it should not be described as an untouched final holdout. Establish a separate final evaluation protocol before further model selection.
+Each fold uses 1,260 training origins, 252 validation origins, five-observation gaps at both boundaries, and 21 test origins. The development period contains 120 folds and **2,520 forecasts per model on identical dates**. Preprocessing/clustering fit only on training data; validation controls early stopping and regime-specific selection. Later folds may learn from earlier test observations after they become historical.
 
-## Remaining sequence
+Metrics: MAE, RMSE and variance-based QLIKE (lower is better). Dependence-aware comparisons use HAC lags 4/10/20, Holm corrections and moving-block bootstrap intervals. Robustness tables cover years, regimes, nonoverlapping-target offsets and a 2020 shock sensitivity check.
 
-1. **Freeze the research specification.** Select the statistical and LSTM variants using the completed development evidence, record every fixed parameter, and stop tuning on the current evaluation period.
-2. **Create an untouched final evaluation.** Choose a later period that has not informed model development, rerun all selected models on identical dates, and preserve all preprocessing and clustering boundaries.
-3. **Complete robustness analysis.** Confirm conclusions across regimes, dependence assumptions and major shock periods without changing the frozen models.
-4. **Finish the research presentation.** Consolidate configuration, record dependency versions and experiment provenance, assemble the final plots and tables, and write the methodology, results, limitations and conclusion sections.
+## Reproduced findings
 
-Success means answering: **Does market-regime information improve five-day portfolio-volatility forecasts beyond strong statistical alternatives on unseen future data?** Improvement, limited improvement and no improvement are all valid outcomes when supported by rigorous evaluation.
+GJR-GARCH with Student-t errors has the lowest pooled MAE, RMSE and QLIKE in the development comparison:
+
+| MAE | RMSE | QLIKE | Forecasts |
+| ---: | ---: | ---: | ---: |
+| 0.007468 | 0.011129 | 0.419191 | 2,520 |
+
+QLIKE for regime-switching is 0.437712; the risk-plus-regime LSTM scores 0.697074, and its QLIKE-trained variant scores 0.641875. Regimes improve some neural comparisons but do not establish a general advantage over statistical models. Pooled rankings alone do not establish statistical significance.
+
+See [all model scores](reports/tables/research_all_model_metrics.csv), [robustness results](reports/tables/research_robustness_metrics.csv), [paired QLIKE comparisons](reports/tables/research_qlike_comparisons.csv), and [incremental regime tests](reports/dependence_robust_comparison.md).
+
+These are reproduced development results, not investment advice or confirmatory final-test results. We did not conduct exhaustive tuning or repeated-seed experiments.
+
+## Prospective final evaluation
+
+[configs/frozen_protocol.json](configs/frozen_protocol.json) records the registered specification, normalized code fingerprints, source-history fingerprint and environment. Do not edit/delete it to bypass a failed check.
+
+Check readiness:
+
+```powershell
+.\.venv\Scripts\python.exe -B scripts/final_evaluation.py
+```
+
+When the full future period exists, keep the archived source vintage intact and pass a separate updated file:
+
+```powershell
+.\.venv\Scripts\python.exe -B scripts/final_evaluation.py --run --raw data/raw/30_Industry_Portfolios_Daily_updated.csv
+```
+
+The evaluator selects the **first** 252 post-freeze origins, not a moving favorable window. It checks history, code, configuration and environment; uses the same 11 models; and saves final predictions, metrics, regime summaries, validation choices and paired QLIKE tests under `reports/final_evaluation/`. Existing final outputs are not overwritten. Changed historical source values require preserving the frozen vintage or explicitly documenting a protocol amendment, not silently continuing.
+
+The registration command `python scripts/final_evaluation.py --freeze` is a one-time initialization and refuses an existing registration. The supplied registration is already initialized. A dated repository record is useful provenance, but is not an external preregistration service.
+
+## Repository map
+
+```text
+configs/       Active research config and frozen prospective protocol
+data/raw/      Archived source CSV and provenance
+data/processed/ Generated portfolio targets and statistical predictions
+src/data/      Dataset loader and portfolio/target construction
+src/features/  Trailing features and training-only regime discovery
+src/models/    Rolling, EWMA, GARCH, LSTM and sequence construction
+src/evaluation/ Splits, metrics, regime analysis, prospective boundaries
+scripts/       Reproduction runner, comparisons, report and final evaluation
+tests/         Unit and synthetic end-to-end integration tests
+reports/       Development report, diagnostics, plots and compact tables
+docs/          Data contract, roadmap and implementation change summary
+.github/       Automated test workflow
+```
+
+No future market outcomes have been simulated or fabricated for the final research claim.
