@@ -73,7 +73,9 @@ The intended input is the Kenneth R. French Data Library's daily 30 Industry Por
 
 ## Status
 
-Latest implementation update: market-regime features and K-means are now implemented, along with fold-by-fold regime assignment and descriptive forecast scoring. The full suite passes **49 tests**. The earlier progress table below records the statistical-foundation milestone; current overall progress is approximately **50%**, a planning estimate. Regime-aware forecast models and LSTMs remain unimplemented.
+Current overall progress is approximately **50%**, a planning estimate against the complete research goal. The data pipeline, statistical benchmarks, walk-forward evaluation, regime features, K-means detector and fold-by-fold regime analysis are implemented. Regime-aware forecast models, LSTMs and final research validation remain.
+
+Workspace verification on 2026-10-15: **49 tests passed**. Commit `cb7798c` is present on both `sid` and `main`.
 
 New workflow:
 
@@ -85,11 +87,9 @@ python scripts/analyze_regime_performance.py
 
 `src/evaluation/regime_analysis.py` fits a fresh scaler and K-means model on each fold's training features. It ranks clusters by training-center volatility as lower/middle/higher, preserving raw cluster IDs and centers for inspection. These ranks are relative to each training window, not fixed economic states. Features are calculated through the forecast date, consistent with after-close forecasts. Warm-up rows are removed only within training slices, so evaluation dates never shift.
 
-`scripts/analyze_regime_performance.py` requires existing statistical predictions and verifies their dates and actual targets against the current dataset. It writes `regime_forecasts.csv`, `regime_centers_by_fold.csv`, and `regime_model_metrics.csv` under `reports/tables/`. Metrics describe existing models conditional on the assigned regime; they do not demonstrate that regime inputs improve forecasts. The prediction CSV is currently missing locally, so the error breakdown has not yet been generated.
+`scripts/analyze_regime_performance.py` requires existing statistical predictions and verifies their dates and actual targets against the current dataset. It writes `regime_forecasts.csv`, `regime_centers_by_fold.csv`, and `regime_model_metrics.csv` under `reports/tables/`. Metrics describe existing models conditional on the assigned regime; they do not demonstrate that regime inputs improve forecasts. The prediction CSV must be generated locally before running this analysis.
 
 Next: generate and inspect these descriptive results, then design and validate a regime-aware forecast, followed by LSTM experiments and final research validation.
-
-Approximately **35–40% complete** against the full research scope. This is a planning estimate, not a measured completion score. Workspace verification on 2026-10-14: **25 tests passed**.
 
 | Component | Status | Files |
 | --- | --- | --- |
@@ -101,11 +101,13 @@ Approximately **35–40% complete** against the full research scope. This is a p
 | MAE, RMSE, variance-based QLIKE | Implemented | `src/evaluation/metrics.py` |
 | Pooled and fold-level comparisons | Implemented | `scripts/compare_statistical_models.py` |
 | Exploratory HAC loss comparisons | Implemented | `scripts/analyze_statistical_model_significance.py` |
-| Market-regime features and clustering | Next | Planned under `src/features/` |
+| Market-regime features and clustering | Implemented | `src/features/rolling_features.py`, `src/features/regimes.py` |
+| Fold-by-fold regime analysis | Implemented | `src/evaluation/regime_analysis.py`, `scripts/analyze_regime_performance.py` |
+| Regime-aware forecasting model | Next | Planned |
 | LSTM and regime-aware LSTM | Pending | Planned under `src/models/` |
 | Final holdout, robustness, plots and report | Pending | `reports/` and `docs/` |
 
-The inspected checkout was `sid`. Future development is intended for `gp`; verify your branch before changing code and do not push development work to `main`. Earlier planning documents may still describe the original scaffold; this README records the current implementation and sequence.
+Earlier planning documents may still describe the original scaffold; this README records the current implementation and sequence.
 
 ## Target and forecast timing
 
@@ -151,7 +153,7 @@ The reported best pooled benchmark is **GJR-GARCH with Student-t errors**:
 | QLIKE | 0.419191 |
 | Out-of-sample observations | 2,520 |
 
-These scores were supplied from a previous experiment. Its prediction and metric CSVs were absent from the inspected workspace on 2026-10-14, so the scores were not independently reproduced during this documentation update. The 25-test suite was rerun successfully.
+These scores were supplied from a previous experiment. Its prediction and metric CSVs were absent from the inspected workspace on 2026-10-15, so the scores were not independently reproduced during this documentation update. The 49-test suite was rerun successfully.
 
 The HAC code compares paired losses against normal GARCH and EWMA at lag choices 4 and 20; squared error is the observation-level loss underlying RMSE. These comparisons are exploratory. The reported evidence does not establish superiority across every metric or against every competing model.
 
@@ -159,9 +161,9 @@ The evaluation period has already informed model comparisons. Despite the parame
 
 ## Remaining sequence
 
-1. **Market-regime feature engineering — next.** Implement trailing portfolio volatility, average cross-industry correlation and cross-sectional dispersion in `src/features/rolling_features.py`. Use the industry panel: the current portfolio CSV contains only portfolio returns and the target. Define window lengths, units, warm-up behavior and timing. Test that changing future returns cannot alter earlier features.
-2. **Regime detection and regime-aware forecasting.** Fit scalers and K-means on permitted training data only. Assign validation/test regimes using those fitted objects, characterize regimes, and compare a clearly defined regime-aware forecast against Student-t GJR-GARCH on identical dates.
-3. **LSTM and regime-aware LSTM.** Build historical sequences, tune on validation data, and compare equivalent networks with and without regime inputs. Fit learned preprocessing only on training data and preserve consistent forecast horizons and evaluation dates.
-4. **Final research validation and presentation.** Establish an untouched final test period before further tuning, investigate robustness across market conditions, assess uncertainty, produce plots and tables, and write the technical report. Consolidate configuration, record dependency versions and experiment provenance, and document limitations.
+1. **Generate and inspect regime-conditioned results.** Rebuild the statistical prediction CSV, run `scripts/analyze_regime_performance.py`, and inspect model errors and cluster centers across lower-, middle- and higher-volatility conditions.
+2. **Build a regime-aware forecasting model.** Define how regime information changes or combines forecasts, tune it using permitted validation observations only, and compare it with Student-t GJR-GARCH on identical dates.
+3. **Build the LSTM and regime-aware LSTM.** Construct historical sequences, tune on validation data, and compare equivalent networks with and without regime inputs. Fit learned preprocessing only on training data and preserve consistent forecast horizons and evaluation dates.
+4. **Complete final research validation and presentation.** Establish an untouched final test period, investigate robustness across market conditions, assess uncertainty, produce plots and tables, and write the technical report. Consolidate configuration, record dependency versions and experiment provenance, and document limitations.
 
 Success means answering: **Does market-regime information improve five-day portfolio-volatility forecasts beyond strong statistical alternatives on unseen future data?** Improvement, limited improvement and no improvement are all valid outcomes when supported by rigorous evaluation.
